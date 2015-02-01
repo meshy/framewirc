@@ -27,9 +27,6 @@ class Connection:
         self._connected = True
         while self._connected:
             message = yield from self.reader.readline()
-            if not message:
-                self.disconnect()
-                return
             self.handle(message)
 
     def disconnect(self):
@@ -40,6 +37,10 @@ class Connection:
 
     def handle(self, raw_message):
         """Dispatch the message to all listeners."""
+        if not raw_message:
+            self.disconnect()
+            return
+
         message = Message(raw_message)
         for listener in self.listeners:
             listener.handle(self, message)

@@ -15,10 +15,10 @@ def console_output(connection, message):
     print(message.prefix, message.command, message.params, message.trailing)
 
 
-listeners = [
+listeners = (
     Listener(handler=console_output),
     CommandListener(command=b'PING', handler=on_ping),
-]
+)
 
 
 c = Connection(listeners, 'leguin.freenode.net', 6697)

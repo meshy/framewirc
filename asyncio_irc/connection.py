@@ -39,11 +39,13 @@ class Connection:
         self.on_disconnect()
 
     def handle(self, raw_message):
+        """Dispatch the message to all listeners."""
         message = Message(raw_message)
         for listener in self.listeners:
             listener.handle(self, message)
 
     def on_connect(self):
+        """Upon connection to the network, send user's credentials."""
         self.send(b'USER meshybot 0 * :MeshyBot7')
         self.send(b'NICK meshybot')
 

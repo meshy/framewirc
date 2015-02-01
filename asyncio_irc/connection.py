@@ -50,6 +50,7 @@ class Connection:
         self.send(b'NICK meshybot')
 
     def send(self, message):
+        """Dispatch a message to the IRC network."""
         message = message + b'\r\n'
         print('write', message)
         self.writer.write(message)

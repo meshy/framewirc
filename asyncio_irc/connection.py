@@ -26,8 +26,8 @@ class Connection:
 
         self._connected = True
         while self._connected:
-            message = yield from self.reader.readline()
-            self.handle(message)
+            raw_message = yield from self.reader.readline()
+            self.handle(raw_message)
 
     def disconnect(self):
         """Close the connection to the server."""

@@ -7,15 +7,14 @@ class Connection:
     """
     Communicates with an IRC network.
 
-    Incoming data is transformed into Message objects, and dispatched to
-    methods defined in `listeners`.
+    Incoming data is transformed into Message objects, and sent to `listeners`.
     """
 
-    def __init__(self, listeners, host, port):
+    def __init__(self, listeners, host, port, ssl=True):
         self.listeners = listeners
         self.host = host
         self.port = port
-        self.ssl = True
+        self.ssl = ssl
 
     @asyncio.coroutine
     def connect(self):

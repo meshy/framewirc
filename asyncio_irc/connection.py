@@ -33,7 +33,6 @@ class Connection:
         """Close the connection to the server."""
         self._connected = False
         self.writer.close()
-        self.on_disconnect()
 
     def handle(self, raw_message):
         """Dispatch the message to all listeners."""
@@ -49,9 +48,6 @@ class Connection:
         """Upon connection to the network, send user's credentials."""
         self.send(b'USER meshybot 0 * :MeshyBot7')
         self.send(b'NICK meshybot')
-
-    def on_disconnect(self):
-        print('Connection closed')
 
     def send(self, message):
         message = message + b'\r\n'

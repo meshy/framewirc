@@ -9,6 +9,7 @@ from asyncio_irc.listeners import (
     Listener,
     WhitelistListener,
 )
+from asyncio_irc.utils import decode_bytes
 
 
 def console_output(connection, message):
@@ -16,7 +17,7 @@ def console_output(connection, message):
 
 
 def main_channel(connection, message):
-    print(message.trailing)
+    print(decode_bytes(message.trailing))
 
 
 simple_commands = (

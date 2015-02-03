@@ -2,19 +2,13 @@ import asyncio
 
 from asyncio_irc.connection import Connection
 from asyncio_irc.commands import Command
+from asyncio_irc import handlers
 from asyncio_irc.listeners import (
     BlacklistListener,
     CommandListener,
     Listener,
     WhitelistListener,
 )
-
-
-def on_ping(connection, message):
-    payload = Command.PONG.value
-    if message.trailing:
-        payload += b' :' + message.trailing
-    connection.send(payload)
 
 
 def console_output(connection, message):
@@ -40,7 +34,7 @@ blacklist = simple_commands + (Command.PING,)
 
 
 listeners = (
-    CommandListener(command=Command.PING, handler=on_ping),
+    CommandListener(command=Command.PING, handler=handlers.ping),
     WhitelistListener(whitelist=simple_commands, handler=main_channel),
     BlacklistListener(blacklist=blacklist, handler=console_output),
 )

@@ -61,5 +61,6 @@ class Connection:
 
         # Add line ending.
         message = message + b'\r\n'
-        print('write', message)
+
+        # Send to network.
         self.writer.write(message)

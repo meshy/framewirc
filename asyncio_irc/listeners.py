@@ -9,7 +9,7 @@ class Listener:
 class CommandListener(Listener):
     def __init__(self, command, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.command = command
+        self.command = command.value
 
     def handle(self, connection, message):
         if message.command == self.command:

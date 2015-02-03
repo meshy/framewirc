@@ -2,12 +2,13 @@ import asyncio
 
 from asyncio_irc.connection import Connection
 from asyncio_irc.listeners import CommandListener, Listener
+from asyncio_irc.commands import Command
 
 
 def on_ping(connection, message):
-    payload = b'PONG'
-    if message.params:
-        payload += b' ' + b' '.join(message.params)
+    payload = Command.PONG.value
+    if message.trailing:
+        payload += b' :' + message.trailing
     connection.send(payload)
 
 
@@ -17,7 +18,7 @@ def console_output(connection, message):
 
 listeners = (
     Listener(handler=console_output),
-    CommandListener(command=b'PING', handler=on_ping),
+    CommandListener(command=Command.PING, handler=on_ping),
 )
 
 

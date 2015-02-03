@@ -45,6 +45,8 @@ if __name__ == '__main__':
         listeners=listeners,
         host='leguin.freenode.net',
         port=6697,
+        nick='meshybot',
+        real_name='MeshyBot7',
     )
     asyncio.Task(c.connect())
     loop = asyncio.get_event_loop()

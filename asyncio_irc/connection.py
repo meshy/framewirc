@@ -10,10 +10,12 @@ class Connection:
     Incoming data is transformed into Message objects, and sent to `listeners`.
     """
 
-    def __init__(self, *, listeners, host, port, ssl=True):
+    def __init__(self, *, listeners, host, port, nick, real_name=None, ssl=True):
         self.listeners = listeners
         self.host = host
         self.port = port
+        self.nick = nick
+        self.real_name = real_name or nick
         self.ssl = ssl
 
     @asyncio.coroutine
@@ -46,8 +48,8 @@ class Connection:
 
     def on_connect(self):
         """Upon connection to the network, send user's credentials."""
-        self.send('USER meshybot 0 * :MeshyBot7')
-        self.send('NICK meshybot')
+        self.send('USER {} 0 * :{}'.format(self.nick, self.real_name))
+        self.send('NICK {}'.format(self.nick))
 
     def send(self, message):
         """Dispatch a message to the IRC network."""

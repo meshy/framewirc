@@ -46,11 +46,18 @@ class Connection:
 
     def on_connect(self):
         """Upon connection to the network, send user's credentials."""
-        self.send(b'USER meshybot 0 * :MeshyBot7')
-        self.send(b'NICK meshybot')
+        self.send('USER meshybot 0 * :MeshyBot7')
+        self.send('NICK meshybot')
 
     def send(self, message):
         """Dispatch a message to the IRC network."""
+        # Cast to bytes
+        try:
+            message = message.encode()
+        except AttributeError:
+            pass
+
+        # Add line ending.
         message = message + b'\r\n'
         print('write', message)
         self.writer.write(message)

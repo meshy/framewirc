@@ -22,8 +22,12 @@ listeners = (
 )
 
 
-if __name__ == '__main__'
-    c = Connection(listeners, 'leguin.freenode.net', 6697)
+if __name__ == '__main__':
+    c = Connection(
+        listeners=listeners,
+        host='leguin.freenode.net',
+        port=6697,
+    )
     asyncio.Task(c.connect())
     loop = asyncio.get_event_loop()
     loop.run_forever()

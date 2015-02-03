@@ -10,7 +10,7 @@ class Connection:
     Incoming data is transformed into Message objects, and sent to `listeners`.
     """
 
-    def __init__(self, listeners, host, port, ssl=True):
+    def __init__(self, *, listeners, host, port, ssl=True):
         self.listeners = listeners
         self.host = host
         self.port = port

@@ -1,4 +1,5 @@
 class Listener:
+    """Always invokes the handler."""
     def __init__(self, handler):
         self.handler = handler
 
@@ -7,6 +8,7 @@ class Listener:
 
 
 class CommandListener(Listener):
+    """Only invokes the handler on one particular command."""
     def __init__(self, command, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.command = command.value

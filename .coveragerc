@@ -1,0 +1,3 @@
+[run]
+source = asyncio_irc
+omit = *tests*

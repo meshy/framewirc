@@ -5,6 +5,8 @@ help:
 	@echo " make test | Run the tests."
 
 test:
+	@coverage run -m unittest discover
+	@coverage report --show-missing
 	@flake8
 
 release:

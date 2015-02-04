@@ -6,22 +6,27 @@ from ..message import Message
 
 class TestMessage(TestCase):
     """Test the Message class."""
+    def build_message(self, prefix, params, trailing):
+        raw_message = b'COMMAND'
+        if prefix:
+            raw_message = b':prefixed-data ' + raw_message
+        if params:
+            raw_message += b' param1 param2'
+        if trailing:
+            raw_message += b' :trailing message'
+
+        return raw_message
+
     def test_possibilities(self):
         """
         Make sure that Messages can be created.
 
         Checks every combination of a prefix, params, and trailing data.
         """
-        choices = True, False
-        for prefix, params, trailing in product(choices, choices, choices):
+        on_off = True, False
+        for prefix, params, trailing in product(on_off, on_off, on_off):
             with self.subTest(prefix=prefix, params=params, trailing=trailing):
-                raw_message = b'COMMAND'
-                if prefix:
-                    raw_message = b':prefixed-data ' + raw_message
-                if params:
-                    raw_message += b' param1 param2'
-                if trailing:
-                    raw_message += b' :trailing message'
+                raw_message = self.build_message(prefix, params, trailing)
 
                 message = Message(raw_message)
 

@@ -58,10 +58,12 @@ class TestMessageBytes(TestCase):
         self.assertEqual(message, b'COMMAND param1 param2')
 
     def test_suffix(self):
+        """Command with suffix."""
         message = message_bytes(b'COMMAND', suffix=b'suffix ftw!')
         self.assertEqual(message, b'COMMAND :suffix ftw!')
 
     def test_all(self):
+        """Command with prefix, params, and suffix."""
         message = message_bytes(
             b'COMMAND',
             prefix=b'something',

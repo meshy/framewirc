@@ -1,2 +1,1 @@
-chardet==2.3.0
-beautifulsoup4==4.3.2
+-e .

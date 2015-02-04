@@ -3,7 +3,7 @@ class Message:
 
     def __init__(self, raw_message):
         self.raw = raw_message
-        self.prefix, self.command, self.params, self.trailing = self.elements()
+        self.prefix, self.command, self.params, self.suffix = self.elements()
 
     def elements(self):
         """
@@ -17,11 +17,11 @@ class Message:
         if message[0:1] == b':':  # Odd slicing required for bytes
             prefix, message = message[1:].split(b' ', 1)
 
-        trailing = b''
+        suffix = b''
         if b' :' in message:
-            message, trailing = message.split(b' :', 1)
+            message, suffix = message.split(b' :', 1)
 
         command, *params = message.split()
         params = list(filter(None, params))
 
-        return prefix, command, params, trailing
+        return prefix, command, params, suffix

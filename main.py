@@ -12,11 +12,11 @@ from asyncio_irc.utils import decode_bytes
 
 
 def console_output(connection, message):
-    print(message.prefix, message.command, message.params, message.trailing)
+    print(message.prefix, message.command, message.params, message.suffix)
 
 
 def main_channel(connection, message):
-    print(decode_bytes(message.trailing))
+    print(decode_bytes(message.suffix))
 
 
 simple_commands = (

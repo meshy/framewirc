@@ -3,9 +3,9 @@ class Message:
 
     def __init__(self, raw_message):
         self.raw = raw_message
-        self.prefix, self.command, self.params, self.trailing = self.unpack()
+        self.prefix, self.command, self.params, self.trailing = self.elements()
 
-    def unpack(self):
+    def elements(self):
         """
         Split the raw message into it's component parts.
 

@@ -5,7 +5,13 @@ from ..message import Message
 
 
 class TestMessage(TestCase):
+    """Test the Message class."""
     def test_possibilities(self):
+        """
+        Make sure that Messages can be created.
+
+        Checks every combination of a prefix, params, and trailing data.
+        """
         choices = True, False
         for prefix, params, trailing in product(choices, choices, choices):
             with self.subTest(prefix=prefix, params=params, trailing=trailing):

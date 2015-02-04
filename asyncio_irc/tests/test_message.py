@@ -70,3 +70,18 @@ class TestMessageBytes(TestCase):
         )
         expected = b':something COMMAND param1 param2 :suffix ftw!'
         self.assertEqual(message, expected)
+
+    def test_unicode(self):
+        """
+        Make sure message_bytes works when passed strings.
+
+        No valid commands contain unicode chars, so not bothering with ♬ in it.
+        """
+        message = message_bytes(
+            'COMMAND',
+            prefix='mμ',
+            params=['tést', 'test'],
+            suffix='ftẃ!',
+        )
+        expected = b':m\xce\xbc COMMAND t\xc3\xa9st test :ft\xe1\xba\x83!'
+        self.assertEqual(message, expected)

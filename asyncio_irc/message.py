@@ -1,3 +1,6 @@
+from .utils import to_bytes
+
+
 class Message:
     """A message recieved from the IRC network."""
 
@@ -28,6 +31,11 @@ class Message:
 
 
 def message_bytes(command, prefix=None, params=None, suffix=None):
+    command = to_bytes(command)
+    prefix = to_bytes(prefix)
+    params = list(map(to_bytes, params or []))
+    suffix = to_bytes(suffix)
+
     message = command
     if prefix:
         message = b':' + prefix + b' ' + message

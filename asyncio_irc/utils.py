@@ -8,3 +8,10 @@ def to_unicode(bytestring):
     except UnicodeDecodeError:
         guesses = ['latin-1', 'iso-8859-1']
         return UnicodeDammit(bytestring, guesses).markup
+
+
+def to_bytes(string):
+    try:
+        return string.encode()
+    except AttributeError:
+        return string

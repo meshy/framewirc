@@ -30,7 +30,7 @@ class Message:
         return prefix, command, params, suffix
 
 
-def message_bytes(command, prefix=None, params=None, suffix=None):
+def message_bytes(command, prefix=b'', params=None, suffix=b''):
     command = to_bytes(command)
     prefix = to_bytes(prefix)
     params = list(map(to_bytes, params or []))

@@ -1,8 +1,4 @@
-import enum
-
-
-@enum.unique
-class Command(enum.Enum):
+class Command:
     ########
     # BASE #
     ########

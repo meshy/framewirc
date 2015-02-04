@@ -38,9 +38,3 @@ class BlacklistListener(Listener):
     def handle(self, connection, message):
         if message.command not in self.blacklist:
             super().handle(connection, message)
-
-
-# class RegexListener(Listener):
-#     def __init__(self, regex, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         self.regex = regex

@@ -1,12 +1,11 @@
 import asyncio
 
-from asyncio_irc.connection import Connection
-from asyncio_irc.commands import Command
 from asyncio_irc import handlers
+from asyncio_irc.commands import Command
+from asyncio_irc.connection import Connection
 from asyncio_irc.listeners import (
     BlacklistListener,
     CommandListener,
-    Listener,
     WhitelistListener,
 )
 from asyncio_irc.utils import decode_bytes

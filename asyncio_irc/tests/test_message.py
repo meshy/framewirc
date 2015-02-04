@@ -1,7 +1,7 @@
 from itertools import product
 from unittest import TestCase
 
-from ..message import Message
+from ..message import Message, message_bytes
 
 
 class TestMessage(TestCase):
@@ -38,3 +38,25 @@ class TestMessage(TestCase):
                 self.assertEqual(message.prefix, expected_prefix)
                 self.assertEqual(message.params, expected_params)
                 self.assertEqual(message.suffix, expected_suffix)
+
+
+class TestMessageBytes(TestCase):
+    """Make sure that message_bytes correctly builds bytes objects."""
+    def test_basic(self):
+        """Simple command only."""
+        message = message_bytes(b'COMMAND')
+        self.assertEqual(message, b'COMMAND')
+
+    def test_prefix(self):
+        """Command with prefix."""
+        message = message_bytes(b'COMMAND', prefix=b'something')
+        self.assertEqual(message, b':something COMMAND')
+
+    def test_params(self):
+        """Command with params."""
+        message = message_bytes(b'COMMAND', params=[b'param1', b'param2'])
+        self.assertEqual(message, b'COMMAND param1 param2')
+
+    def test_suffix(self):
+        message = message_bytes(b'COMMAND', suffix=b'suffix ftw!')
+        self.assertEqual(message, b'COMMAND :suffix ftw!')

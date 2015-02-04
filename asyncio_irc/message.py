@@ -25,3 +25,15 @@ class Message:
         params = list(filter(None, params))
 
         return prefix, command, params, suffix
+
+
+def message_bytes(command, prefix=None, params=None, suffix=None):
+    message = command
+    if prefix:
+        message = b':' + prefix + b' ' + message
+    if params:
+        params = b' '.join(params)
+        message = message + b' ' + params
+    if suffix:
+        message = message + b' :' + suffix
+    return message

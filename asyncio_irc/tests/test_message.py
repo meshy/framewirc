@@ -17,9 +17,9 @@ class TestMessage(TestCase):
 
         return raw_message
 
-    def test_possibilities(self):
+    def test_permutations(self):
         """
-        Make sure that Messages can be created.
+        Make sure that Message attributes are set correctly.
 
         Checks every combination of a prefix, params, and suffix data.
         """

@@ -8,7 +8,7 @@ from asyncio_irc.listeners import (
     CommandListener,
     WhitelistListener,
 )
-from asyncio_irc.utils import decode_bytes
+from asyncio_irc.utils import to_unicode
 
 
 def console_output(connection, message):
@@ -16,7 +16,7 @@ def console_output(connection, message):
 
 
 def main_channel(connection, message):
-    print(decode_bytes(message.suffix))
+    print(to_unicode(message.suffix))
 
 
 simple_commands = (

@@ -1,7 +1,7 @@
 from bs4 import UnicodeDammit
 
 
-def decode_bytes(bytestring):
+def to_unicode(bytestring):
     """Try to decode as UTF8, then fall back to UnicodeDammit."""
     try:
         return bytestring.decode()

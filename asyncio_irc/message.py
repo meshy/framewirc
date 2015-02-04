@@ -18,7 +18,7 @@ class Message:
             prefix, message = message[1:].split(b' ', 1)
 
         trailing = b''
-        if message.find(b' :') != -1:
+        if b' :' in message:
             message, trailing = message.split(b' :', 1)
 
         command, *params = message.split()

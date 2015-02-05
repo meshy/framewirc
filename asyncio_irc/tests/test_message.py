@@ -1,7 +1,7 @@
 from itertools import product
 from unittest import TestCase
 
-from ..message import Message, message_bytes
+from ..message import build_message, Message
 
 
 class TestMessage(TestCase):
@@ -40,34 +40,35 @@ class TestMessage(TestCase):
                 self.assertEqual(message.suffix, expected_suffix)
 
 
-class TestMessageBytes(TestCase):
-    """Make sure that message_bytes correctly builds bytes objects."""
+class TestBuildMessage(TestCase):
+    """Make sure that build_message correctly builds bytes objects."""
     def test_basic(self):
         """Simple command only."""
-        message = message_bytes(b'COMMAND')
+        message = build_message(b'COMMAND')
         self.assertEqual(message, b'COMMAND')
 
     def test_prefix(self):
         """Command with prefix."""
-        message = message_bytes(b'COMMAND', prefix=b'something')
+        message = build_message(b'COMMAND', prefix=b'something')
         self.assertEqual(message, b':something COMMAND')
 
     def test_params(self):
         """Command with params."""
-        message = message_bytes(b'COMMAND', params=[b'param1', b'param2'])
+        message = build_message(b'COMMAND', b'param1', b'param2')
         self.assertEqual(message, b'COMMAND param1 param2')
 
     def test_suffix(self):
         """Command with suffix."""
-        message = message_bytes(b'COMMAND', suffix=b'suffix ftw!')
+        message = build_message(b'COMMAND', suffix=b'suffix ftw!')
         self.assertEqual(message, b'COMMAND :suffix ftw!')
 
     def test_all(self):
         """Command with prefix, params, and suffix."""
-        message = message_bytes(
+        message = build_message(
             b'COMMAND',
+            b'param1',
+            b'param2',
             prefix=b'something',
-            params=[b'param1', b'param2'],
             suffix=b'suffix ftw!',
         )
         expected = b':something COMMAND param1 param2 :suffix ftw!'
@@ -75,14 +76,15 @@ class TestMessageBytes(TestCase):
 
     def test_unicode(self):
         """
-        Make sure message_bytes works when passed strings.
+        Make sure build_message works when passed strings.
 
         No valid commands contain unicode chars, so not bothering with ♬ in it.
         """
-        message = message_bytes(
+        message = build_message(
             'COMMAND',
+            'tést',
+            'test',
             prefix='mμ',
-            params=['tést', 'test'],
             suffix='ftẃ!',
         )
         expected = b':m\xce\xbc COMMAND t\xc3\xa9st test :ft\xe1\xba\x83!'

@@ -1,6 +1,6 @@
 import asyncio
 
-from .message import Message
+from .message import build_message, Message
 
 
 class Connection:
@@ -48,8 +48,8 @@ class Connection:
 
     def on_connect(self):
         """Upon connection to the network, send user's credentials."""
-        self.send('USER {} 0 * :{}'.format(self.nick, self.real_name))
-        self.send('NICK {}'.format(self.nick))
+        self.send(build_message('USER', self.nick, '0 *', suffix=self.real_name))
+        self.send(build_message('NICK', self.nick))
 
     def send(self, message):
         """Dispatch a message to the IRC network."""

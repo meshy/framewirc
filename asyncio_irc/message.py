@@ -32,10 +32,11 @@ class Message(bytes):
         return prefix, command, params, suffix
 
 
-def message_bytes(command, prefix=b'', params=None, suffix=b''):
+def build_message(command, *args, prefix=b'', suffix=b''):
+    """Construct a message that can be sent to the IRC network."""
     command = to_bytes(command)
     prefix = to_bytes(prefix)
-    params = list(map(to_bytes, params or []))
+    params = tuple(map(to_bytes, args))
     suffix = to_bytes(suffix)
 
     message = command

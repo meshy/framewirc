@@ -1,11 +1,11 @@
 from .utils import to_bytes
 
 
-class Message:
+class Message(bytes):
     """A message recieved from the IRC network."""
 
-    def __init__(self, raw_message):
-        self.raw = raw_message
+    def __init__(self, raw_message_bytes_ignored):
+        super().__init__()
         self.prefix, self.command, self.params, self.suffix = self._elements()
 
     def _elements(self):
@@ -14,7 +14,7 @@ class Message:
 
         Adapted from http://stackoverflow.com/a/930706/400691
         """
-        message = self.raw.strip()
+        message = self.strip()
 
         prefix = b''
         # Odd slicing required for bytes to avoid getting int instead of char

@@ -17,7 +17,9 @@ class Message:
         message = self.raw.strip()
 
         prefix = b''
-        if message[0:1] == b':':  # Odd slicing required for bytes
+        # Odd slicing required for bytes to avoid getting int instead of char
+        # http://stackoverflow.com/q/28249597/400691
+        if message[0:1] == b':':
             prefix, message = message[1:].split(b' ', 1)
 
         suffix = b''

@@ -6,9 +6,9 @@ class Message:
 
     def __init__(self, raw_message):
         self.raw = raw_message
-        self.prefix, self.command, self.params, self.suffix = self.elements()
+        self.prefix, self.command, self.params, self.suffix = self._elements()
 
-    def elements(self):
+    def _elements(self):
         """
         Split the raw message into it's component parts.
 

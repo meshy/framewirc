@@ -47,4 +47,4 @@ def build_message(command, *args, prefix=b'', suffix=b''):
         message = message + b' ' + params
     if suffix:
         message = message + b' :' + suffix
-    return message
+    return message + b'\r\n'

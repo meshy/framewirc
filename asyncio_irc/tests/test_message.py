@@ -45,22 +45,22 @@ class TestBuildMessage(TestCase):
     def test_basic(self):
         """Simple command only."""
         message = build_message(b'COMMAND')
-        self.assertEqual(message, b'COMMAND')
+        self.assertEqual(message, b'COMMAND\r\n')
 
     def test_prefix(self):
         """Command with prefix."""
         message = build_message(b'COMMAND', prefix=b'something')
-        self.assertEqual(message, b':something COMMAND')
+        self.assertEqual(message, b':something COMMAND\r\n')
 
     def test_params(self):
         """Command with params."""
         message = build_message(b'COMMAND', b'param1', b'param2')
-        self.assertEqual(message, b'COMMAND param1 param2')
+        self.assertEqual(message, b'COMMAND param1 param2\r\n')
 
     def test_suffix(self):
         """Command with suffix."""
         message = build_message(b'COMMAND', suffix=b'suffix ftw!')
-        self.assertEqual(message, b'COMMAND :suffix ftw!')
+        self.assertEqual(message, b'COMMAND :suffix ftw!\r\n')
 
     def test_all(self):
         """Command with prefix, params, and suffix."""
@@ -71,7 +71,7 @@ class TestBuildMessage(TestCase):
             prefix=b'something',
             suffix=b'suffix ftw!',
         )
-        expected = b':something COMMAND param1 param2 :suffix ftw!'
+        expected = b':something COMMAND param1 param2 :suffix ftw!\r\n'
         self.assertEqual(message, expected)
 
     def test_unicode(self):
@@ -87,5 +87,5 @@ class TestBuildMessage(TestCase):
             prefix='mμ',
             suffix='ftẃ!',
         )
-        expected = b':m\xce\xbc COMMAND t\xc3\xa9st test :ft\xe1\xba\x83!'
+        expected = b':m\xce\xbc COMMAND t\xc3\xa9st test :ft\xe1\xba\x83!\r\n'
         self.assertEqual(message, expected)

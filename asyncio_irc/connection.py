@@ -53,14 +53,12 @@ class Connection:
 
     def send(self, message):
         """Dispatch a message to the IRC network."""
-        # Cast to bytes
-        try:
-            message = message.encode()
-        except AttributeError:
-            pass
-
-        # Add line ending.
-        message = message + b'\r\n'
+        # Must be bytes.
+        assert isinstance(message, bytes)
+        # Must end in windows line feed (CR-LF).
+        assert message[-2:] == b'\r\n'
+        # Must not exceed 512 characters in length.
+        assert len(message) <= 512
 
         # Send to network.
         self.writer.write(message)

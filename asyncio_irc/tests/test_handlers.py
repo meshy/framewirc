@@ -12,4 +12,4 @@ class TestPing(TestCase):
 
         handlers.ping(connection, message)
 
-        connection.send.assert_called_with(b'PONG :hostname.example.com')
+        connection.send.assert_called_with(b'PONG :hostname.example.com\r\n')

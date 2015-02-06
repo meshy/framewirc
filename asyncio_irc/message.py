@@ -27,7 +27,7 @@ class ReceivedMessage(bytes):
             message, suffix = message.split(b' :', 1)
 
         command, *params = message.split()
-        params = list(filter(None, params))
+        params = tuple(filter(None, params))
 
         return prefix, command, params, suffix
 

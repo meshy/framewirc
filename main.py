@@ -18,7 +18,7 @@ def main_channel(connection, message):
     print(to_unicode(message.suffix))
 
 
-simple_commands = (
+raw_commands = (
     commands.NOTICE,
     commands.RPL_WELCOME,
     commands.RPL_YOURHOST,
@@ -29,7 +29,7 @@ simple_commands = (
     commands.RPL_ENDOFMOTD,
 )
 
-blacklist = simple_commands + (commands.PING,)
+blacklist = raw_commands + (commands.PING,)
 
 
 handlers = (

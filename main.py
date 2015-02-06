@@ -32,7 +32,7 @@ simple_commands = (
 blacklist = simple_commands + (commands.PING,)
 
 
-listeners = (
+handlers = (
     CommandListener(command=commands.PING, handler=handlers.ping),
     WhitelistListener(whitelist=simple_commands, handler=main_channel),
     BlacklistListener(blacklist=blacklist, handler=console_output),
@@ -41,7 +41,7 @@ listeners = (
 
 if __name__ == '__main__':
     c = Connection(
-        listeners=listeners,
+        handlers=handlers,
         host='leguin.freenode.net',
         port=6697,
         nick='meshybot',

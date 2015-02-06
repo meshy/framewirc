@@ -9,7 +9,7 @@ class Connection:
     """
     Communicates with an IRC network.
 
-    Incoming data is sent to `listeners`.
+    Incoming data is sent to `handlers`.
     """
     bad_nick_addendum = b'^'
     bad_nick_triggers = (
@@ -17,8 +17,8 @@ class Connection:
         commands.ERR_NICKCOLLISION,
     )
 
-    def __init__(self, listeners, host, port, nick, real_name=None, ssl=True):
-        self.listeners = listeners
+    def __init__(self, handlers, host, port, nick, real_name=None, ssl=True):
+        self.handlers = handlers
         self.host = host
         self.port = port
         self._proposed_nick = nick
@@ -44,7 +44,7 @@ class Connection:
         self.writer.close()
 
     def handle(self, raw_message):
-        """Dispatch the message to all listeners."""
+        """Dispatch the message to all handlers."""
         if not raw_message:
             self.disconnect()
             return
@@ -54,8 +54,8 @@ class Connection:
         if message.command in self.bad_nick_triggers:
             self.set_nick(self.nick + self.bad_nick_addendum)
 
-        for listener in self.listeners:
-            listener.handle(self, message)
+        for handler in self.handlers:
+            handler.handle(self, message)
 
     def on_connect(self):
         """Upon connection to the network, send user's credentials."""

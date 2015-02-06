@@ -2,7 +2,7 @@ import asyncio
 
 from asyncio_irc import commands, handlers
 from asyncio_irc.connection import Connection
-from asyncio_irc.listeners import (
+from asyncio_irc.filters import (
     command_blacklist,
     command_only,
     command_whitelist,

@@ -1,6 +1,7 @@
 import asyncio
 
 from .message import build_message, ReceivedMessage
+from .utils import to_bytes
 
 
 class Connection:
@@ -14,7 +15,7 @@ class Connection:
         self.listeners = listeners
         self.host = host
         self.port = port
-        self.nick = nick
+        self.nick = to_bytes(nick)
         self.real_name = real_name or nick
         self.ssl = ssl
 

@@ -10,14 +10,6 @@ from asyncio_irc.listeners import (
 from asyncio_irc.utils import to_unicode
 
 
-def console_output(connection, message):
-    print(message.prefix, message.command, message.params, message.suffix)
-
-
-def main_channel(connection, message):
-    print(to_unicode(message.suffix))
-
-
 raw_commands = (
     commands.NOTICE,
     commands.RPL_WELCOME,
@@ -30,6 +22,14 @@ raw_commands = (
 )
 
 blacklist = raw_commands + (commands.PING,)
+
+
+def console_output(connection, message):
+    print(message.prefix, message.command, message.params, message.suffix)
+
+
+def main_channel(connection, message):
+    print(to_unicode(message.suffix))
 
 
 handlers = (

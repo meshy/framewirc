@@ -10,7 +10,7 @@ class Connection:
     Incoming data is sent to `listeners`.
     """
 
-    def __init__(self, *, listeners, host, port, nick, real_name=None, ssl=True):
+    def __init__(self, listeners, host, port, nick, real_name=None, ssl=True):
         self.listeners = listeners
         self.host = host
         self.port = port

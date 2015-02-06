@@ -55,7 +55,7 @@ class Connection:
             self.set_nick(self.nick + self.bad_nick_addendum)
 
         for handler in self.handlers:
-            handler.handle(self, message)
+            handler(self, message)
 
     def on_connect(self):
         """Upon connection to the network, send user's credentials."""

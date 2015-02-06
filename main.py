@@ -3,9 +3,9 @@ import asyncio
 from asyncio_irc import commands, handlers
 from asyncio_irc.connection import Connection
 from asyncio_irc.listeners import (
-    BlacklistListener,
-    CommandListener,
-    WhitelistListener,
+    command_blacklist,
+    command_only,
+    command_whitelist,
 )
 from asyncio_irc.utils import to_unicode
 
@@ -21,21 +21,21 @@ raw_commands = (
     commands.RPL_ENDOFMOTD,
 )
 
-blacklist = raw_commands + (commands.PING,)
 
-
+@command_blacklist(raw_commands + (commands.PING, commands.PRIVMSG))
 def console_output(connection, message):
     print(message.prefix, message.command, message.params, message.suffix)
 
 
+@command_whitelist(raw_commands)
 def main_channel(connection, message):
     print(to_unicode(message.suffix))
 
 
 handlers = (
-    CommandListener(command=commands.PING, handler=handlers.ping),
-    WhitelistListener(whitelist=simple_commands, handler=main_channel),
-    BlacklistListener(blacklist=blacklist, handler=console_output),
+    handlers.ping,
+    main_channel,
+    console_output,
 )
 
 

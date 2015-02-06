@@ -1,7 +1,6 @@
 import asyncio
 
-from asyncio_irc import handlers
-from asyncio_irc.commands import Command
+from asyncio_irc import commands, handlers
 from asyncio_irc.connection import Connection
 from asyncio_irc.listeners import (
     BlacklistListener,
@@ -20,21 +19,21 @@ def main_channel(connection, message):
 
 
 simple_commands = (
-    Command.NOTICE,
-    Command.RPL_WELCOME,
-    Command.RPL_YOURHOST,
-    Command.RPL_CREATED,
-    Command.RPL_MYINFO,
-    Command.RPL_MOTDSTART,
-    Command.RPL_MOTD,
-    Command.RPL_ENDOFMOTD,
+    commands.NOTICE,
+    commands.RPL_WELCOME,
+    commands.RPL_YOURHOST,
+    commands.RPL_CREATED,
+    commands.RPL_MYINFO,
+    commands.RPL_MOTDSTART,
+    commands.RPL_MOTD,
+    commands.RPL_ENDOFMOTD,
 )
 
-blacklist = simple_commands + (Command.PING,)
+blacklist = simple_commands + (commands.PING,)
 
 
 listeners = (
-    CommandListener(command=Command.PING, handler=handlers.ping),
+    CommandListener(command=commands.PING, handler=handlers.ping),
     WhitelistListener(whitelist=simple_commands, handler=main_channel),
     BlacklistListener(blacklist=blacklist, handler=console_output),
 )

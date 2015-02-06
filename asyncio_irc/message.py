@@ -1,7 +1,7 @@
 from .utils import to_bytes
 
 
-class Message(bytes):
+class ReceivedMessage(bytes):
     """A message recieved from the IRC network."""
 
     def __init__(self, raw_message_bytes_ignored):

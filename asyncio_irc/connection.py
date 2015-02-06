@@ -1,13 +1,13 @@
 import asyncio
 
-from .message import build_message, Message
+from .message import build_message, ReceivedMessage
 
 
 class Connection:
     """
     Communicates with an IRC network.
 
-    Incoming data is transformed into Message objects, and sent to `listeners`.
+    Incoming data is sent to `listeners`.
     """
 
     def __init__(self, *, listeners, host, port, nick, real_name=None, ssl=True):
@@ -42,7 +42,7 @@ class Connection:
             self.disconnect()
             return
 
-        message = Message(raw_message)
+        message = ReceivedMessage(raw_message)
         for listener in self.listeners:
             listener.handle(self, message)
 

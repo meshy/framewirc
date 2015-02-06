@@ -1,11 +1,11 @@
 from itertools import product
 from unittest import TestCase
 
-from ..message import build_message, Message
+from ..message import build_message, ReceivedMessage
 
 
-class TestMessage(TestCase):
-    """Test the Message class."""
+class TestReceivedMessage(TestCase):
+    """Test the ReceivedMessage class."""
     def build_message(self, prefix, params, suffix):
         raw_message = b'COMMAND'
         if prefix:
@@ -28,7 +28,7 @@ class TestMessage(TestCase):
             with self.subTest(prefix=prefix, params=params, suffix=suffix):
                 raw_message = self.build_message(prefix, params, suffix)
 
-                message = Message(raw_message)
+                message = ReceivedMessage(raw_message)
 
                 expected_prefix = b'prefixed-data' if prefix else b''
                 expected_params = [b'param1', b'param2'] if params else []

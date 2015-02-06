@@ -1,5 +1,6 @@
 import asyncio
 
+from . import commands
 from .message import build_message, ReceivedMessage
 from .utils import to_bytes
 
@@ -10,12 +11,17 @@ class Connection:
 
     Incoming data is sent to `listeners`.
     """
+    bad_nick_addendum = b'^'
+    bad_nick_triggers = (
+        commands.ERR_NICKNAMEINUSE,
+        commands.ERR_NICKCOLLISION,
+    )
 
     def __init__(self, listeners, host, port, nick, real_name=None, ssl=True):
         self.listeners = listeners
         self.host = host
         self.port = port
-        self.nick = to_bytes(nick)
+        self._proposed_nick = nick
         self.real_name = real_name or nick
         self.ssl = ssl
 
@@ -44,13 +50,18 @@ class Connection:
             return
 
         message = ReceivedMessage(raw_message)
+
+        if message.command in self.bad_nick_triggers:
+            self.set_nick(self.nick + self.bad_nick_addendum)
+
         for listener in self.listeners:
             listener.handle(self, message)
 
     def on_connect(self):
         """Upon connection to the network, send user's credentials."""
-        self.send(build_message('USER', self.nick, '0 *', suffix=self.real_name))
-        self.send(build_message('NICK', self.nick))
+        nick = self._proposed_nick
+        self.send(build_message('USER', nick, '0 *', suffix=self.real_name))
+        self.set_nick(nick)
 
     def send(self, message):
         """Dispatch a message to the IRC network."""
@@ -63,3 +74,7 @@ class Connection:
 
         # Send to network.
         self.writer.write(message)
+
+    def set_nick(self, new_nick):
+        self.send(build_message('NICK', new_nick))
+        self.nick = to_bytes(new_nick)

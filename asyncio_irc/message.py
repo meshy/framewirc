@@ -1,4 +1,4 @@
-from .utils import to_bytes
+from .utils import to_bytes, to_unicode
 
 
 class ReceivedMessage(bytes):
@@ -14,17 +14,17 @@ class ReceivedMessage(bytes):
 
         Adapted from http://stackoverflow.com/a/930706/400691
         """
-        message = self.strip()
+        message = to_unicode(self.strip())
 
-        prefix = b''
+        prefix = ''
         # Odd slicing required for bytes to avoid getting int instead of char
         # http://stackoverflow.com/q/28249597/400691
-        if message[0:1] == b':':
-            prefix, message = message[1:].split(b' ', 1)
+        if message[0:1] == ':':
+            prefix, message = message[1:].split(' ', 1)
 
-        suffix = b''
-        if b' :' in message:
-            message, suffix = message.split(b' :', 1)
+        suffix = ''
+        if ' :' in message:
+            message, suffix = message.split(' :', 1)
 
         command, *params = message.split()
         params = tuple(filter(None, params))

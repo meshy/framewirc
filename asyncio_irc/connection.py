@@ -77,4 +77,4 @@ class Connection:
 
     def set_nick(self, new_nick):
         self.send(build_message('NICK', new_nick))
-        self.nick = to_bytes(new_nick)
+        self.nick = new_nick

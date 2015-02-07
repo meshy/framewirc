@@ -11,7 +11,7 @@ class TestCommandBlacklist(TestCase):
 
     def test_correct(self):
         message = ReceivedMessage(b'COMMAND\r\n')
-        wrapped = filters.command_blacklist([b'WRONG_COMMAND'])(self.handler)
+        wrapped = filters.command_blacklist(['WRONG_COMMAND'])(self.handler)
 
         wrapped(self.connection, message)
 
@@ -22,7 +22,7 @@ class TestCommandBlacklist(TestCase):
 
     def test_incorrect(self):
         message = ReceivedMessage(b'WRONG_COMMAND\r\n')
-        wrapped = filters.command_blacklist([b'WRONG_COMMAND'])(self.handler)
+        wrapped = filters.command_blacklist(['WRONG_COMMAND'])(self.handler)
 
         wrapped(self.connection, message)
 
@@ -36,7 +36,7 @@ class TestCommandOnly(TestCase):
 
     def test_correct(self):
         message = ReceivedMessage(b'COMMAND\r\n')
-        wrapped = filters.command_only(b'COMMAND')(self.handler)
+        wrapped = filters.command_only('COMMAND')(self.handler)
 
         wrapped(self.connection, message)
 
@@ -47,7 +47,7 @@ class TestCommandOnly(TestCase):
 
     def test_incorrect(self):
         message = ReceivedMessage(b'WRONG_COMMAND\r\n')
-        wrapped = filters.command_only(b'COMMAND')(self.handler)
+        wrapped = filters.command_only('COMMAND')(self.handler)
 
         wrapped(self.connection, message)
 
@@ -61,7 +61,7 @@ class TestCommandWhitelist(TestCase):
 
     def test_correct(self):
         message = ReceivedMessage(b'COMMAND\r\n')
-        wrapped = filters.command_whitelist([b'COMMAND'])(self.handler)
+        wrapped = filters.command_whitelist(['COMMAND'])(self.handler)
 
         wrapped(self.connection, message)
 
@@ -72,7 +72,7 @@ class TestCommandWhitelist(TestCase):
 
     def test_incorrect(self):
         message = ReceivedMessage(b'WRONG_COMMAND\r\n')
-        wrapped = filters.command_whitelist([b'COMMAND'])(self.handler)
+        wrapped = filters.command_whitelist(['COMMAND'])(self.handler)
 
         wrapped(self.connection, message)
 

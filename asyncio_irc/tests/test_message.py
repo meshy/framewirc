@@ -30,11 +30,11 @@ class TestReceivedMessage(TestCase):
 
                 message = ReceivedMessage(raw_message)
 
-                expected_prefix = b'prefixed-data' if prefix else b''
-                expected_params = (b'param1', b'param2') if params else ()
-                expected_suffix = b'suffix message' if suffix else b''
+                expected_prefix = 'prefixed-data' if prefix else ''
+                expected_params = ('param1', 'param2') if params else ()
+                expected_suffix = 'suffix message' if suffix else ''
 
-                self.assertEqual(message.command, b'COMMAND')
+                self.assertEqual(message.command, 'COMMAND')
                 self.assertEqual(message.prefix, expected_prefix)
                 self.assertEqual(message.params, expected_params)
                 self.assertEqual(message.suffix, expected_suffix)

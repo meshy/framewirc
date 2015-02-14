@@ -2,7 +2,6 @@ import asyncio
 
 from . import commands
 from .message import build_message, ReceivedMessage
-from .utils import to_bytes
 
 
 class Connection:

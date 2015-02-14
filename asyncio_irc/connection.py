@@ -4,6 +4,18 @@ from . import commands
 from .message import build_message, ReceivedMessage
 
 
+class MessageTooLong(Exception):
+    pass
+
+
+class NoLineEnding(Exception):
+    pass
+
+
+class StrayLineEnding(Exception):
+    pass
+
+
 class Connection:
     """
     Communicates with an IRC network.
@@ -65,11 +77,20 @@ class Connection:
     def send(self, message):
         """Dispatch a message to the IRC network."""
         # Must be bytes.
-        assert isinstance(message, bytes)
+        if not isinstance(message, bytes):
+            raise TypeError
+
         # Must end in windows line feed (CR-LF).
-        assert message[-2:] == b'\r\n'
+        if message[-2:] != b'\r\n':
+            raise NoLineEnding
+
+        # Must not contain other line feeds
+        if message.count(b'\r\n') > 1:
+            raise StrayLineEnding
+
         # Must not exceed 512 characters in length.
-        assert len(message) <= 512
+        if len(message) > 512:
+            raise MessageTooLong
 
         # Send to network.
         self.writer.write(message)

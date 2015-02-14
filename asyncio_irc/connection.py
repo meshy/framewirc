@@ -80,6 +80,10 @@ class Connection:
         if not isinstance(message, bytes):
             raise TypeError
 
+        # Must not exceed 512 characters in length.
+        if len(message) > 512:
+            raise MessageTooLong
+
         # Must end in windows line feed (CR-LF).
         if message[-2:] != b'\r\n':
             raise NoLineEnding
@@ -87,10 +91,6 @@ class Connection:
         # Must not contain other line feeds
         if message.count(b'\r\n') > 1:
             raise StrayLineEnding
-
-        # Must not exceed 512 characters in length.
-        if len(message) > 512:
-            raise MessageTooLong
 
         # Send to network.
         self.writer.write(message)

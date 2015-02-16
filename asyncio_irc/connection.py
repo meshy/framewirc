@@ -1,19 +1,7 @@
 import asyncio
 
-from . import commands
+from . import commands, exceptions
 from .message import build_message, ReceivedMessage
-
-
-class MessageTooLong(Exception):
-    pass
-
-
-class NoLineEnding(Exception):
-    pass
-
-
-class StrayLineEnding(Exception):
-    pass
 
 
 class Connection:
@@ -82,15 +70,15 @@ class Connection:
 
         # Must not exceed 512 characters in length.
         if len(message) > 512:
-            raise MessageTooLong
+            raise exceptions.MessageTooLong
 
         # Must end in windows line feed (CR-LF).
         if message[-2:] != b'\r\n':
-            raise NoLineEnding
+            raise exceptions.NoLineEnding
 
         # Must not contain other line feeds
         if message.count(b'\r\n') > 1:
-            raise StrayLineEnding
+            raise exceptions.StrayLineEnding
 
         # Send to network.
         self.writer.write(message)

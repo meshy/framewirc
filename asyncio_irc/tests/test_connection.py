@@ -1,7 +1,7 @@
 from unittest import mock, TestCase
 
-from ..connection import (
-    Connection,
+from ..connection import Connection
+from ..exceptions import (
     MessageTooLong,
     NoLineEnding,
     StrayLineEnding,

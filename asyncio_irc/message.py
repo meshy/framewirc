@@ -1,3 +1,4 @@
+from . import exceptions
 from .utils import to_bytes, to_unicode
 
 
@@ -34,11 +35,19 @@ class ReceivedMessage(bytes):
 
 def build_message(command, *args, prefix=b'', suffix=b''):
     """Construct a message that can be sent to the IRC network."""
+
+    # Make sure everything is bytes.
     command = to_bytes(command)
     prefix = to_bytes(prefix)
     params = tuple(map(to_bytes, args))
     suffix = to_bytes(suffix)
 
+    # Must not contain line feeds.
+    to_check = (prefix, command, params, suffix) + params
+    if any(filter(lambda s: b'\r\n' in s, to_check)):
+        raise exceptions.StrayLineEnding
+
+    # Join the message together.
     message = command
     if prefix:
         message = b':' + prefix + b' ' + message
@@ -47,4 +56,10 @@ def build_message(command, *args, prefix=b'', suffix=b''):
         message = message + b' ' + params
     if suffix:
         message = message + b' :' + suffix
-    return message + b'\r\n'
+    message = message + b'\r\n'
+
+    # Must not exceed 512 characters in length.
+    if len(message) > 512:
+        raise exceptions.MessageTooLong
+
+    return message

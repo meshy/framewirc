@@ -1,6 +1,7 @@
 from itertools import product
 from unittest import TestCase
 
+from .. import exceptions
 from ..message import build_message, ReceivedMessage
 
 
@@ -89,3 +90,30 @@ class TestBuildMessage(TestCase):
         )
         expected = b':m\xce\xbc COMMAND t\xc3\xa9st test :ft\xe1\xba\x83!\r\n'
         self.assertEqual(message, expected)
+
+
+class TestBuildMessageExceptions(TestCase):
+    def test_linefeed_in_suffix(self):
+        """Make sure that the suffix cannot contain a linefeed (\r\n)."""
+        with self.assertRaises(exceptions.StrayLineEnding):
+            build_message('COMMAND', suffix='\r\n')
+
+    def test_linefeed_in_params(self):
+        """Make sure that the params cannot contain a linefeed (\r\n)."""
+        with self.assertRaises(exceptions.StrayLineEnding):
+            build_message('COMMAND', '\r\n')
+
+    def test_linefeed_in_prefix(self):
+        """Make sure that the prefix cannot contain a linefeed (\r\n)."""
+        with self.assertRaises(exceptions.StrayLineEnding):
+            build_message('COMMAND', prefix='\r\n')
+
+    def test_linefeed_in_command(self):
+        """Make sure that the suffix cannot contain a linefeed (\r\n)."""
+        with self.assertRaises(exceptions.StrayLineEnding):
+            build_message('COMMAND\r\n')
+
+    def test_message_too_long(self):
+        """Make sure that the the message cannot be longer than 512 bytes."""
+        with self.assertRaises(exceptions.MessageTooLong):
+            build_message('A' * 511)  # 513 chars when \r\n added.

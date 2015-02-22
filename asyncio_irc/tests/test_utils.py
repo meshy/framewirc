@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from ..utils import to_bytes, to_unicode
+from ..utils import chunk_message, to_bytes, to_unicode
 
 
 class TestToUnicode(TestCase):
@@ -47,3 +47,48 @@ class TestToBytes(TestCase):
     def test_not_bytes_or_string(self):
         with self.assertRaises(AttributeError):
             to_bytes(None)
+
+
+class TestChunkMessage(TestCase):
+    """Test the behaviour of the chunk_message function."""
+    def test_return_type(self):
+        """Does it return a list of bytes objects?"""
+        expected = [b'Just a simple message']
+        messages = chunk_message('Just a simple message', max_length=100)
+        self.assertEqual(messages, expected)
+
+    def test_split_linefeeds(self):
+        """Does it split on newline chars?"""
+        msg = 'A message\rsplit over\nmany lines\r\nwith odd linebreaks.'
+        expected = [
+            b'A message',
+            b'split over',
+            b'many lines',
+            b'with odd linebreaks.',
+        ]
+        messages = chunk_message(msg, max_length=100)
+        self.assertEqual(messages, expected)
+
+    def test_split_long_line(self):
+        """Does it split long lines?"""
+        msg = 'Message to be split into chunks of twenty characters or less.'
+        expected = [
+            b'Message to be split',
+            b'into chunks of',
+            b'twenty characters or',
+            b'less.',
+        ]
+        messages = chunk_message(msg, max_length=20)
+        self.assertEqual(messages, expected)
+
+    def test_split_long_word(self):
+        """Does it split long words?"""
+        msg = 'Sup Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch?'
+        expected = [
+            b'Sup',
+            b'Llanfairpwllgwyngyll',
+            b'gogerychwyrndrobwlll',
+            b'lantysiliogogogoch?',
+        ]
+        messages = chunk_message(msg, max_length=20)
+        self.assertEqual(messages, expected)

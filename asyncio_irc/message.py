@@ -2,6 +2,9 @@ from . import exceptions
 from .utils import to_bytes, to_unicode
 
 
+MAX_LENGTH = 512  # The largest legal size of an IRC command.
+
+
 class ReceivedMessage(bytes):
     """A message recieved from the IRC network."""
 

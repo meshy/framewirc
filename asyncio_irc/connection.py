@@ -1,7 +1,7 @@
 import asyncio
 
 from . import commands, exceptions
-from .message import build_message, ReceivedMessage
+from .message import build_message, MAX_LENGTH, ReceivedMessage
 
 
 class Connection:
@@ -69,7 +69,7 @@ class Connection:
             raise TypeError
 
         # Must not exceed 512 characters in length.
-        if len(message) > 512:
+        if len(message) > MAX_LENGTH:
             raise exceptions.MessageTooLong
 
         # Must end in windows line feed (CR-LF).

@@ -1,5 +1,5 @@
-from . import exceptions
-from .utils import to_bytes, to_unicode
+from . import commands, exceptions
+from .utils import chunk_message, to_bytes, to_unicode
 
 
 MAX_LENGTH = 512  # The largest legal size of an IRC command.
@@ -66,3 +66,12 @@ def build_message(command, *args, prefix=b'', suffix=b''):
         raise exceptions.MessageTooLong
 
     return message
+
+
+def make_privmsgs(target, message):
+    """Turn a string into a number of PRIVMSG commands."""
+    max_length = MAX_LENGTH - (len(commands.PRIVMSG) + len(target) + 5)
+    messages = []
+    for line in chunk_message(message, max_length=max_length):
+        messages.append(build_message(commands.PRIVMSG, target, suffix=line))
+    return messages

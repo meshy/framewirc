@@ -8,7 +8,7 @@ from ..exceptions import (
 )
 
 
-class TestSend(TestCase):
+class ConnectionTestCase(TestCase):
     def setUp(self):
         self.connection = Connection(
             handlers=[],
@@ -18,6 +18,8 @@ class TestSend(TestCase):
         )
         self.connection.writer = mock.MagicMock()
 
+
+class TestSend(ConnectionTestCase):
     def test_ideal_case(self):
         message = b'PRIVMSG meshy :Nice IRC lib you have there\r\n'
         self.connection.send(message)
@@ -53,16 +55,7 @@ class TestSend(TestCase):
         self.connection.writer.write.assert_called_with(message)
 
 
-class TestSendBatch(TestCase):
-    def setUp(self):
-        self.connection = Connection(
-            handlers=[],
-            host='example.com',
-            port=6697,
-            nick='unused',
-        )
-        self.connection.writer = mock.MagicMock()
-
+class TestSendBatch(ConnectionTestCase):
     def test_send_batch(self):
         messages = [
             b'PRVMSG meshy :Getting there\r\n',

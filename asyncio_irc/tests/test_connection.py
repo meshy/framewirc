@@ -51,3 +51,23 @@ class TestSend(TestCase):
         message = b'FIFTEEN chars :' + 495 * b'a' + b'\r\n'  # 512 chars
         self.connection.send(message)
         self.connection.writer.write.assert_called_with(message)
+
+
+class TestSendBatch(TestCase):
+    def setUp(self):
+        self.connection = Connection(
+            handlers=[],
+            host='example.com',
+            port=6697,
+            nick='unused',
+        )
+        self.connection.writer = mock.MagicMock()
+
+    def test_send_batch(self):
+        messages = [
+            b'PRVMSG meshy :Getting there\r\n',
+            b'PRVMSG meshy :It is almost usable!\r\n',
+        ]
+        self.connection.send_batch(messages)
+        calls = self.connection.writer.write.mock_calls
+        self.assertEqual(calls, list(map(mock.call, messages)))

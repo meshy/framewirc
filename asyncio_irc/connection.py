@@ -83,6 +83,10 @@ class Connection:
         # Send to network.
         self.writer.write(message)
 
+    def send_batch(self, messages):
+        for message in messages:
+            self.send(message)
+
     def set_nick(self, new_nick):
         self.send(build_message('NICK', new_nick))
         self.nick = new_nick

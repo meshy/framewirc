@@ -71,7 +71,8 @@ class Connection:
     def on_connect(self):
         """Upon connection to the network, send user's credentials."""
         nick = self.nick
-        self.send(build_message('USER', nick, '0 *', suffix=self.real_name))
+        msg = build_message(commands.USER, nick, '0 *', suffix=self.real_name)
+        self.send(msg)
         self.set_nick(nick)
 
     def send(self, message):
@@ -100,5 +101,5 @@ class Connection:
             self.send(message)
 
     def set_nick(self, new_nick):
-        self.send(build_message('NICK', new_nick))
+        self.send(build_message(commands.NICK, new_nick))
         self.nick = new_nick

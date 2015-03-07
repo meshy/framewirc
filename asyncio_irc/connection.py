@@ -44,7 +44,6 @@ class Connection:
 
         self.on_connect()
 
-        self._connected = True
         while self._connected:
             raw_message = yield from self.reader.readline()
             self.handle(raw_message)
@@ -74,6 +73,7 @@ class Connection:
         msg = build_message(commands.USER, nick, '0 *', suffix=self.real_name)
         self.send(msg)
         self.set_nick(nick)
+        self._connected = True
 
     def send(self, message):
         """Dispatch a message to the IRC network."""

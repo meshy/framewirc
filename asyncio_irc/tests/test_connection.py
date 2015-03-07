@@ -64,3 +64,15 @@ class TestSendBatch(ConnectionTestCase):
         self.connection.send_batch(messages)
         calls = self.connection.writer.write.mock_calls
         self.assertEqual(calls, list(map(mock.call, messages)))
+
+
+class TestSetNick(ConnectionTestCase):
+    def test_command_sent(self):
+        new_nick = 'meshy'
+        self.connection.set_nick(new_nick)
+        self.connection.writer.write.assert_called_with(b'NICK meshy\r\n')
+
+    def test_new_nick_kept(self):
+        new_nick = 'meshy'
+        self.connection.set_nick(new_nick)
+        self.assertEqual(self.connection.nick, new_nick)

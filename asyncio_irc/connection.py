@@ -16,13 +16,25 @@ class Connection:
         commands.ERR_NICKCOLLISION,
     )
 
-    def __init__(self, handlers, host, port, nick, real_name=None, ssl=True):
-        self.handlers = handlers
-        self.host = host
-        self.port = port
-        self._proposed_nick = nick
-        self.real_name = real_name or nick
-        self.ssl = ssl
+    def __init__(self, **kwargs):
+        """
+        Allow for attributes to be set on subclasses and with params.
+
+        Throws MissingAttributes if a required attribute has not been set
+        one way or another.
+        """
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+        required = ('handlers', 'host', 'nick', 'port', 'real_name', 'ssl')
+        missing_attrs = []
+
+        for attr in required:
+            if not hasattr(self, attr):
+                missing_attrs.append(attr)
+
+        if missing_attrs:
+            raise exceptions.MissingAttributes(missing_attrs)
 
     @asyncio.coroutine
     def connect(self):
@@ -58,7 +70,7 @@ class Connection:
 
     def on_connect(self):
         """Upon connection to the network, send user's credentials."""
-        nick = self._proposed_nick
+        nick = self.nick
         self.send(build_message('USER', nick, '0 *', suffix=self.real_name))
         self.set_nick(nick)
 

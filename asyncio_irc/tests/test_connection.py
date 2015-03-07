@@ -4,6 +4,7 @@ from ..connection import Connection
 from ..exceptions import (
     MessageTooLong,
     MissingAttributes,
+    MustBeBytes,
     NoLineEnding,
     StrayLineEnding,
 )
@@ -141,7 +142,7 @@ class TestSend(ConnectionTestCase):
 
     def test_not_bytes(self):
         message = 'PRIVMSG meshy :Nice IRC lib you have there\r\n'
-        with self.assertRaises(TypeError):
+        with self.assertRaises(MustBeBytes):
             self.connection.send(message)
         self.assertFalse(self.connection.writer.write.called)
 

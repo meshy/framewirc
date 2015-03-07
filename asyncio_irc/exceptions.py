@@ -8,6 +8,10 @@ class MissingAttributes(Exception):
         super().__init__(msg)
 
 
+class MustBeBytes(Exception):
+    pass
+
+
 class NoLineEnding(Exception):
     pass
 

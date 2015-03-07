@@ -79,7 +79,7 @@ class Connection:
         """Dispatch a message to the IRC network."""
         # Must be bytes.
         if not isinstance(message, bytes):
-            raise TypeError
+            raise exceptions.MustBeBytes
 
         # Must not exceed 512 characters in length.
         if len(message) > MAX_LENGTH:

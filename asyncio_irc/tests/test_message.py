@@ -141,7 +141,6 @@ class TestMakePrivMsgs(TestCase):
         self.assertEqual(messages, expected)
 
     def test_long_line(self):
-        self.maxDiff = None
         too_long = (
             "We're no strangers to love, You know the rules and so do I. " +
             "A full commitment's what I'm thinking of, You wouldnt get " +

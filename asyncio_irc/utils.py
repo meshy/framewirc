@@ -1,6 +1,9 @@
 import cchardet
 
 
+LINEFEED = b'\r\n'
+
+
 def to_unicode(bytestring):
     """Try to decode as UTF8, then fall back to cchatdet."""
     try:

@@ -1,5 +1,5 @@
 from . import commands, exceptions
-from .utils import chunk_message, to_bytes, to_unicode
+from .utils import chunk_message, LINEFEED, to_bytes, to_unicode
 
 
 MAX_LENGTH = 512  # The largest legal size of an IRC command.
@@ -47,7 +47,7 @@ def build_message(command, *args, prefix=b'', suffix=b''):
 
     # Must not contain line feeds.
     to_check = (prefix, command, params, suffix) + params
-    if any(filter(lambda s: b'\r\n' in s, to_check)):
+    if any(filter(lambda s: LINEFEED in s, to_check)):
         raise exceptions.StrayLineEnding
 
     # Join the message together.
@@ -59,7 +59,7 @@ def build_message(command, *args, prefix=b'', suffix=b''):
         message = message + b' ' + params
     if suffix:
         message = message + b' :' + suffix
-    message = message + b'\r\n'
+    message = message + LINEFEED
 
     # Must not exceed 512 characters in length.
     if len(message) > 512:

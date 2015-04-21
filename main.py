@@ -2,11 +2,7 @@ import asyncio
 
 from asyncio_irc import commands, handlers
 from asyncio_irc.connection import Connection
-from asyncio_irc.filters import (
-    command_blacklist,
-    command_only,
-    command_whitelist,
-)
+from asyncio_irc.filters import command_blacklist, command_whitelist
 from asyncio_irc.utils import to_unicode
 
 

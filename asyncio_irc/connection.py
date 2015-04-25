@@ -5,7 +5,7 @@ from .message import build_message, MAX_LENGTH, ReceivedMessage
 from . import utils
 
 
-class Connection:
+class Connection(utils.RequiredAttributesMixin):
     """
     Communicates with an IRC network.
 
@@ -16,26 +16,7 @@ class Connection:
         commands.ERR_NICKNAMEINUSE,
         commands.ERR_NICKCOLLISION,
     )
-
-    def __init__(self, **kwargs):
-        """
-        Allow for attributes to be set on subclasses and with params.
-
-        Throws MissingAttributes if a required attribute has not been set
-        one way or another.
-        """
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-
-        required = ('handlers', 'host', 'nick', 'port', 'real_name', 'ssl')
-        missing_attrs = []
-
-        for attr in required:
-            if not hasattr(self, attr):
-                missing_attrs.append(attr)
-
-        if missing_attrs:
-            raise exceptions.MissingAttributes(missing_attrs)
+    required_attributes = ('handlers', 'host', 'nick', 'port', 'real_name', 'ssl')
 
     @asyncio.coroutine
     def connect(self):

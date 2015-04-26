@@ -27,6 +27,7 @@ class TestRequiredFields(TestCase):
 
 
 class ConnectionTestCase(TestCase):
+    """Base TestCase for tests that want an instance of Connection."""
     def setUp(self):
         self.connection = Connection(
             handlers=[],

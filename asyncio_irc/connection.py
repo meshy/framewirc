@@ -1,8 +1,8 @@
 import asyncio
 
 from . import commands, exceptions
-from .message import build_message, MAX_LENGTH, ReceivedMessage
 from . import utils
+from .message import build_message, MAX_LENGTH, ReceivedMessage
 
 
 class Connection(utils.RequiredAttributesMixin):

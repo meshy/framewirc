@@ -9,14 +9,14 @@ class Connection(utils.RequiredAttributesMixin):
     """
     Communicates with an IRC network.
 
-    Incoming data is sent to `handlers`.
+    Incoming data is sent to `client.handle`.
     """
     bad_nick_addendum = b'^'
     bad_nick_triggers = (
         commands.ERR_NICKNAMEINUSE,
         commands.ERR_NICKCOLLISION,
     )
-    required_attributes = ('handlers', 'host', 'nick', 'port', 'real_name', 'ssl')
+    required_attributes = ('client', 'host', 'nick', 'port', 'real_name', 'ssl')
 
     @asyncio.coroutine
     def connect(self):
@@ -46,8 +46,7 @@ class Connection(utils.RequiredAttributesMixin):
         if message.command in self.bad_nick_triggers:
             self.set_nick(self.nick + self.bad_nick_addendum)
 
-        for handler in self.handlers:
-            handler(self, message)
+        self.client.handle(message)
 
     def on_connect(self):
         """Upon connection to the network, send user's credentials."""

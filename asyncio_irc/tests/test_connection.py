@@ -1,5 +1,6 @@
 from unittest import mock, TestCase
 
+from ..client import Client
 from ..connection import Connection
 from ..exceptions import (
     MessageTooLong,
@@ -13,7 +14,7 @@ class TestRequiredFields(TestCase):
     """Test to show that RequiredAttribuesMixin is properly configured."""
     def test_fields(self):
         """Are the correct fields being checked?"""
-        required = ('handlers', 'host', 'nick', 'port', 'real_name', 'ssl')
+        required = ('client', 'host', 'nick', 'port', 'real_name', 'ssl')
         self.assertCountEqual(Connection.required_attributes, required)
 
     def test_uses_required_attributes_mixin(self):
@@ -30,7 +31,7 @@ class ConnectionTestCase(TestCase):
     """Base TestCase for tests that want an instance of Connection."""
     def setUp(self):
         self.connection = Connection(
-            handlers=[],
+            client=Client(handlers=[]),
             host='example.com',
             port=6697,
             ssl=True,

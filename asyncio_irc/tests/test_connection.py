@@ -3,122 +3,27 @@ from unittest import mock, TestCase
 from ..connection import Connection
 from ..exceptions import (
     MessageTooLong,
-    MissingAttributes,
     MustBeBytes,
     NoLineEnding,
     StrayLineEnding,
 )
 
 
-class ConnectionInitTest(TestCase):
-    handlers = [mock.Mock()]
-    host = 'test.example.com'
-    port = 1337
-    nick = 'meshy'
-    ssl = mock.Mock()
-    real_name = 'Charlie Denton'
+class TestRequiredFields(TestCase):
+    """Test to show that RequiredAttribuesMixin is properly configured."""
+    def test_fields(self):
+        """Are the correct fields being checked?"""
+        required = ('handlers', 'host', 'nick', 'port', 'real_name', 'ssl')
+        self.assertCountEqual(Connection.required_attributes, required)
 
-    def get_init_params(self, remove=()):
-        params = {
-            'handlers': self.handlers,
-            'host': self.host,
-            'port': self.port,
-            'nick': self.nick,
-            'ssl': self.ssl,
-            'real_name': self.real_name,
-        }
-        for to_remove in remove:
-            params.pop(to_remove)
-        return params
+    def test_uses_required_attributes_mixin(self):
+        """Is RequiredAttributesMixin.__init__ actually getting called?"""
+        kwargs = {'host': 'example.com'}
+        path = 'asyncio_irc.utils.RequiredAttributesMixin.__init__'
+        with mock.patch(path, return_value=None) as mixin_init:
+            Connection(**kwargs)
 
-    def test_set_on_init(self):
-        """Make sure that __init__ params override defaults."""
-        connection = Connection(**self.get_init_params())
-
-        self.assertEqual(connection.handlers, self.handlers)
-        self.assertEqual(connection.host, self.host)
-        self.assertEqual(connection.port, self.port)
-        self.assertEqual(connection.ssl, self.ssl)
-        self.assertEqual(connection.nick, self.nick)
-        self.assertEqual(connection.real_name, self.real_name)
-
-    def test_set_on_subclass(self):
-        """Make sure that defaults are not overridden when params missing."""
-
-        class MyConnection(Connection):
-            handlers = self.handlers
-            host = self.host
-            port = self.port
-            ssl = self.ssl
-            real_name = self.real_name
-
-        connection = MyConnection(nick=self.nick)
-
-        self.assertEqual(connection.handlers, self.handlers)
-        self.assertEqual(connection.host, self.host)
-        self.assertEqual(connection.port, self.port)
-        self.assertEqual(connection.ssl, self.ssl)
-        self.assertEqual(connection.nick, self.nick)
-
-    def test_handlers_not_set(self):
-        """An error should be thrown when the handlers are undefined."""
-        missing = 'handlers'
-        params = self.get_init_params(remove=(missing,))
-
-        with self.assertRaises(MissingAttributes) as cm:
-            Connection(**params)
-
-        self.assertIn(missing, str(cm.exception))
-
-    def test_host_not_set(self):
-        """An error should be thrown when the host is undefined."""
-        missing = 'host'
-        params = self.get_init_params(remove=(missing,))
-
-        with self.assertRaises(MissingAttributes) as cm:
-            Connection(**params)
-
-        self.assertIn(missing, str(cm.exception))
-
-    def test_port_not_set(self):
-        """An error should be thrown when the port is undefined."""
-        missing = 'port'
-        params = self.get_init_params(remove=(missing,))
-
-        with self.assertRaises(MissingAttributes) as cm:
-            Connection(**params)
-
-        self.assertIn(missing, str(cm.exception))
-
-    def test_nick_not_set(self):
-        """An error should be thrown when the nick undefined."""
-        missing = 'nick'
-        params = self.get_init_params(remove=(missing,))
-
-        with self.assertRaises(MissingAttributes) as cm:
-            Connection(**params)
-
-        self.assertIn(missing, str(cm.exception))
-
-    def test_ssl_not_set(self):
-        """An error should be thrown when ssl is undefined."""
-        missing = 'ssl'
-        params = self.get_init_params(remove=(missing,))
-
-        with self.assertRaises(MissingAttributes) as cm:
-            Connection(**params)
-
-        self.assertIn(missing, str(cm.exception))
-
-    def test_real_name_not_set(self):
-        """An error should be thrown when the real_name undefined."""
-        missing = 'real_name'
-        params = self.get_init_params(remove=(missing,))
-
-        with self.assertRaises(MissingAttributes) as cm:
-            Connection(**params)
-
-        self.assertIn(missing, str(cm.exception))
+        mixin_init.assert_called_with(**kwargs)
 
 
 class ConnectionTestCase(TestCase):

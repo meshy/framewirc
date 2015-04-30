@@ -39,7 +39,6 @@ if __name__ == '__main__':
     c = Connection(
         handlers=handlers,
         host='leguin.freenode.net',
-        port=6697,
         nick='meshybot',
         real_name='MeshyBot7',
     )

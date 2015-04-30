@@ -16,7 +16,9 @@ class Connection(utils.RequiredAttributesMixin):
         commands.ERR_NICKNAMEINUSE,
         commands.ERR_NICKCOLLISION,
     )
-    required_attributes = ('client', 'host', 'nick', 'port', 'real_name', 'ssl')
+    required_attributes = ('client', 'host', 'nick', 'real_name')
+    port = 6697
+    ssl = True
 
     @asyncio.coroutine
     def connect(self):

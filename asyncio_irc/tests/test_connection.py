@@ -14,7 +14,7 @@ class TestRequiredFields(TestCase):
     """Test to show that RequiredAttribuesMixin is properly configured."""
     def test_fields(self):
         """Are the correct fields being checked?"""
-        required = ('client', 'host', 'nick', 'port', 'real_name', 'ssl')
+        required = ('client', 'host', 'nick', 'real_name')
         self.assertCountEqual(Connection.required_attributes, required)
 
     def test_uses_required_attributes_mixin(self):

@@ -1,10 +1,33 @@
+import asyncio
+
+from . import commands
 from . import utils
+from .connection import Connection
+from .message import build_message
 
 
 class Client(utils.RequiredAttributesMixin):
-    required_attributes = ['handlers']
+    """Handle events from Connection and offer methods for sending data."""
+    connection_class = Connection
+    required_attributes = ('handlers', 'real_name', 'nick')
+
+    def connect_to(self, host, **kwargs):
+        """Create a Connection. Handled in the event loop."""
+        self.connection = self.connection_class(client=self, host=host, **kwargs)
+        return asyncio.Task(self.connection.connect())
 
     def handle(self, message):
         """Dispatch the message to all handlers."""
         for handler in self.handlers:
             handler(self, message)
+
+    def on_connect(self):
+        nick = self.nick
+        msg = build_message(commands.USER, nick, '0 *', suffix=self.real_name)
+        self.connection.send(msg)
+        self.set_nick(nick)
+
+    def set_nick(self, new_nick):
+        """Set a nick on the network."""
+        self.connection.send(build_message(commands.NICK, new_nick))
+        self.nick = new_nick

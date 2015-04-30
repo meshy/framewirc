@@ -1,6 +1,6 @@
 from unittest import mock, TestCase
 
-from ..client import Client
+from .utils import BlankClient
 from ..connection import Connection
 from ..exceptions import (
     MessageTooLong,
@@ -14,7 +14,7 @@ class TestRequiredFields(TestCase):
     """Test to show that RequiredAttribuesMixin is properly configured."""
     def test_fields(self):
         """Are the correct fields being checked?"""
-        required = ('client', 'host', 'nick', 'real_name')
+        required = ('client', 'host')
         self.assertCountEqual(Connection.required_attributes, required)
 
     def test_uses_required_attributes_mixin(self):
@@ -31,7 +31,7 @@ class ConnectionTestCase(TestCase):
     """Base TestCase for tests that want an instance of Connection."""
     def setUp(self):
         self.connection = Connection(
-            client=Client(handlers=[]),
+            client=BlankClient(),
             host='example.com',
             port=6697,
             ssl=True,
@@ -86,15 +86,3 @@ class TestSendBatch(ConnectionTestCase):
         self.connection.send_batch(messages)
         calls = self.connection.writer.write.mock_calls
         self.assertEqual(calls, list(map(mock.call, messages)))
-
-
-class TestSetNick(ConnectionTestCase):
-    def test_command_sent(self):
-        new_nick = 'meshy'
-        self.connection.set_nick(new_nick)
-        self.connection.writer.write.assert_called_with(b'NICK meshy\r\n')
-
-    def test_new_nick_kept(self):
-        new_nick = 'meshy'
-        self.connection.set_nick(new_nick)
-        self.assertEqual(self.connection.nick, new_nick)

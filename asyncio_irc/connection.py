@@ -2,7 +2,7 @@ import asyncio
 
 from . import commands, exceptions
 from . import utils
-from .message import build_message, MAX_LENGTH, ReceivedMessage
+from .message import MAX_LENGTH, ReceivedMessage
 
 
 class Connection(utils.RequiredAttributesMixin):
@@ -16,7 +16,7 @@ class Connection(utils.RequiredAttributesMixin):
         commands.ERR_NICKNAMEINUSE,
         commands.ERR_NICKCOLLISION,
     )
-    required_attributes = ('client', 'host', 'nick', 'real_name')
+    required_attributes = ('client', 'host')
     port = 6697
     ssl = True
 
@@ -26,7 +26,8 @@ class Connection(utils.RequiredAttributesMixin):
         connection = asyncio.open_connection(self.host, self.port, ssl=self.ssl)
         self.reader, self.writer = yield from connection
 
-        self.on_connect()
+        self._connected = True
+        self.client.on_connect()
 
         while self._connected:
             raw_message = yield from self.reader.readline()
@@ -49,14 +50,6 @@ class Connection(utils.RequiredAttributesMixin):
             self.set_nick(self.nick + self.bad_nick_addendum)
 
         self.client.handle(message)
-
-    def on_connect(self):
-        """Upon connection to the network, send user's credentials."""
-        nick = self.nick
-        msg = build_message(commands.USER, nick, '0 *', suffix=self.real_name)
-        self.send(msg)
-        self.set_nick(nick)
-        self._connected = True
 
     def send(self, message):
         """Dispatch a message to the IRC network."""
@@ -82,7 +75,3 @@ class Connection(utils.RequiredAttributesMixin):
     def send_batch(self, messages):
         for message in messages:
             self.send(message)
-
-    def set_nick(self, new_nick):
-        self.send(build_message(commands.NICK, new_nick))
-        self.nick = new_nick

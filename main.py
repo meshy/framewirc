@@ -1,7 +1,7 @@
 import asyncio
 
 from asyncio_irc import commands, handlers
-from asyncio_irc.connection import Connection
+from asyncio_irc.client import Client
 from asyncio_irc.filters import command_blacklist, command_whitelist
 from asyncio_irc.utils import to_unicode
 
@@ -19,12 +19,12 @@ raw_commands = (
 
 
 @command_blacklist(raw_commands + (commands.PING, commands.PRIVMSG))
-def console_output(connection, message):
+def console_output(client, message):
     print(message.prefix, message.command, message.params, message.suffix)
 
 
 @command_whitelist(raw_commands)
-def main_channel(connection, message):
+def main_channel(client, message):
     print(to_unicode(message.suffix))
 
 
@@ -35,13 +35,11 @@ handlers = (
 )
 
 
+class MyClient(Client):
+    handlers = handlers
+    nick = 'meshybot'
+    real_name = 'MeshyBot7'
+
 if __name__ == '__main__':
-    c = Connection(
-        handlers=handlers,
-        host='leguin.freenode.net',
-        nick='meshybot',
-        real_name='MeshyBot7',
-    )
-    asyncio.Task(c.connect())
-    loop = asyncio.get_event_loop()
-    loop.run_forever()
+    MyClient().connect_to('leguin.freenode.net')
+    asyncio.get_event_loop().run_forever()

@@ -6,7 +6,7 @@ from ..message import ReceivedMessage
 
 class TestCommandBlacklist(TestCase):
     def setUp(self):
-        self.connection = object()
+        self.client = object()
         self.handler = mock.Mock()
 
     def test_correct_list(self):
@@ -14,10 +14,10 @@ class TestCommandBlacklist(TestCase):
         message = ReceivedMessage(b'COMMAND\r\n')
         wrapped = filters.command_blacklist(['WRONG_COMMAND'])(self.handler)
 
-        wrapped(self.connection, message)
+        wrapped(self.client, message)
 
         self.handler.assert_called_once_with(
-            connection=self.connection,
+            client=self.client,
             message=message,
         )
 
@@ -26,7 +26,7 @@ class TestCommandBlacklist(TestCase):
         message = ReceivedMessage(b'WRONG_COMMAND\r\n')
         wrapped = filters.command_blacklist(['WRONG_COMMAND'])(self.handler)
 
-        wrapped(self.connection, message)
+        wrapped(self.client, message)
 
         self.assertFalse(self.handler.called)
 
@@ -35,10 +35,10 @@ class TestCommandBlacklist(TestCase):
         message = ReceivedMessage(b'COMMAND\r\n')
         wrapped = filters.command_blacklist('WRONG_COMMAND')(self.handler)
 
-        wrapped(self.connection, message)
+        wrapped(self.client, message)
 
         self.handler.assert_called_once_with(
-            connection=self.connection,
+            client=self.client,
             message=message,
         )
 
@@ -47,14 +47,14 @@ class TestCommandBlacklist(TestCase):
         message = ReceivedMessage(b'WRONG_COMMAND\r\n')
         wrapped = filters.command_blacklist('WRONG_COMMAND')(self.handler)
 
-        wrapped(self.connection, message)
+        wrapped(self.client, message)
 
         self.assertFalse(self.handler.called)
 
 
 class TestCommandWhitelist(TestCase):
     def setUp(self):
-        self.connection = object()
+        self.client = object()
         self.handler = mock.Mock()
 
     def test_correct_list(self):
@@ -62,10 +62,10 @@ class TestCommandWhitelist(TestCase):
         message = ReceivedMessage(b'COMMAND\r\n')
         wrapped = filters.command_whitelist(['COMMAND'])(self.handler)
 
-        wrapped(self.connection, message)
+        wrapped(self.client, message)
 
         self.handler.assert_called_once_with(
-            connection=self.connection,
+            client=self.client,
             message=message,
         )
 
@@ -74,7 +74,7 @@ class TestCommandWhitelist(TestCase):
         message = ReceivedMessage(b'WRONG_COMMAND\r\n')
         wrapped = filters.command_whitelist(['COMMAND'])(self.handler)
 
-        wrapped(self.connection, message)
+        wrapped(self.client, message)
 
         self.assertFalse(self.handler.called)
 
@@ -83,10 +83,10 @@ class TestCommandWhitelist(TestCase):
         message = ReceivedMessage(b'COMMAND\r\n')
         wrapped = filters.command_whitelist('COMMAND')(self.handler)
 
-        wrapped(self.connection, message)
+        wrapped(self.client, message)
 
         self.handler.assert_called_once_with(
-            connection=self.connection,
+            client=self.client,
             message=message,
         )
 
@@ -95,7 +95,7 @@ class TestCommandWhitelist(TestCase):
         message = ReceivedMessage(b'WRONG_COMMAND\r\n')
         wrapped = filters.command_whitelist('COMMAND')(self.handler)
 
-        wrapped(self.connection, message)
+        wrapped(self.client, message)
 
         self.assertFalse(self.handler.called)
 
@@ -104,6 +104,6 @@ class TestCommandWhitelist(TestCase):
         message = ReceivedMessage(b'COMMA\r\n')
         wrapped = filters.command_whitelist('COMMAND')(self.handler)
 
-        wrapped(self.connection, message)
+        wrapped(self.client, message)
 
         self.assertFalse(self.handler.called)

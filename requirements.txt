@@ -1,4 +1,4 @@
 -e .
 coverage==3.7.1
 flake8==2.3.0
-flake8-import-order==0.5.1
+flake8-import-order==0.5.3

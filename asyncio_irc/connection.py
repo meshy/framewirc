@@ -1,6 +1,6 @@
 import asyncio
 
-from . import commands, exceptions
+from . import exceptions
 from . import utils
 from .message import MAX_LENGTH, ReceivedMessage
 
@@ -11,11 +11,6 @@ class Connection(utils.RequiredAttributesMixin):
 
     Incoming data is sent to `client.handle`.
     """
-    bad_nick_addendum = b'^'
-    bad_nick_triggers = (
-        commands.ERR_NICKNAMEINUSE,
-        commands.ERR_NICKCOLLISION,
-    )
     required_attributes = ('client', 'host')
     port = 6697
     ssl = True
@@ -44,12 +39,7 @@ class Connection(utils.RequiredAttributesMixin):
             self.disconnect()
             return
 
-        message = ReceivedMessage(raw_message)
-
-        if message.command in self.bad_nick_triggers:
-            self.set_nick(self.nick + self.bad_nick_addendum)
-
-        self.client.handle(message)
+        self.client.handle(ReceivedMessage(raw_message))
 
     def send(self, message):
         """Dispatch a message to the IRC network."""

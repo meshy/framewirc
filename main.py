@@ -28,15 +28,14 @@ def main_channel(client, message):
     print(to_unicode(message.suffix))
 
 
-handlers = (
-    handlers.ping,
+my_handlers = handlers.basic_handlers + (
     main_channel,
     console_output,
 )
 
 
 class MyClient(Client):
-    handlers = handlers
+    handlers = my_handlers
     nick = 'meshybot'
     real_name = 'MeshyBot7'
 

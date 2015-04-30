@@ -1,7 +1,7 @@
 from unittest import mock, TestCase
 
-from .. import commands, handlers
-from ..message import build_message, ReceivedMessage
+from .. import handlers
+from ..message import ReceivedMessage
 
 
 class TestPing(TestCase):

@@ -33,8 +33,6 @@ class ConnectionTestCase(TestCase):
         self.connection = Connection(
             client=BlankClient(),
             host='example.com',
-            port=6697,
-            ssl=True,
             nick='unused',
             real_name='Charlie Denton',
         )

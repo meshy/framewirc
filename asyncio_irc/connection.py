@@ -39,7 +39,7 @@ class Connection(utils.RequiredAttributesMixin):
             self.disconnect()
             return
 
-        self.client.handle(ReceivedMessage(raw_message))
+        self.client.on_message(ReceivedMessage(raw_message))
 
     def send(self, message):
         """Dispatch a message to the IRC network."""

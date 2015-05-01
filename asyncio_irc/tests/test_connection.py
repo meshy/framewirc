@@ -1,6 +1,7 @@
 from unittest import mock, TestCase
 
 from .utils import BlankClient
+from ..client import Client
 from ..connection import Connection
 from ..exceptions import (
     MessageTooLong,
@@ -8,6 +9,7 @@ from ..exceptions import (
     NoLineEnding,
     StrayLineEnding,
 )
+from ..message import ReceivedMessage
 
 
 class TestRequiredFields(TestCase):
@@ -37,6 +39,17 @@ class ConnectionTestCase(TestCase):
             real_name='Charlie Denton',
         )
         self.connection.writer = mock.MagicMock()
+
+
+class TestHandle(ConnectionTestCase):
+    def test_normal_message(self):
+        """Messages should be passed through to client.on_message()"""
+        raw_message = b'PRIVMSG meshy :You should really see this!\r\n'
+        self.connection.client = mock.MagicMock(spec=Client)
+        self.connection.handle(raw_message)
+
+        expected = ReceivedMessage(raw_message)
+        self.connection.client.on_message.assert_called_with(expected)
 
 
 class TestSend(ConnectionTestCase):

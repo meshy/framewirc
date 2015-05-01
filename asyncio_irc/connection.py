@@ -34,7 +34,7 @@ class Connection(utils.RequiredAttributesMixin):
         self.writer.close()
 
     def handle(self, raw_message):
-        """Dispatch the message to all handlers."""
+        """Dispatch the message to the client."""
         if not raw_message:
             self.disconnect()
             return

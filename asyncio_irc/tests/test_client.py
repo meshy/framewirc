@@ -40,14 +40,14 @@ class TestRequiredFields(TestCase):
         self.assertEqual(str(cm.exception), expectied)
 
 
-class TestClientHandle(TestCase):
+class TestClientOnMessage(TestCase):
     def test_handlers_called(self):
         """When a message comes in, it should be passed to the handlers."""
         handler = mock.MagicMock()
         client = BlankClient(handlers=[handler])
         message = ReceivedMessage(b'TEST message\r\n')
 
-        client.handle(message)
+        client.on_message(message)
 
         handler.assert_called_with(client, message)
 

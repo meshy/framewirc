@@ -16,16 +16,16 @@ class Client(utils.RequiredAttributesMixin):
         self.connection = self.connection_class(client=self, host=host, **kwargs)
         return asyncio.Task(self.connection.connect())
 
-    def handle(self, message):
-        """Dispatch the message to all handlers."""
-        for handler in self.handlers:
-            handler(self, message)
-
     def on_connect(self):
         nick = self.nick
         msg = build_message(commands.USER, nick, '0 *', suffix=self.real_name)
         self.connection.send(msg)
         self.set_nick(nick)
+
+    def on_message(self, message):
+        """Get a message from IRC and send it to all handlers."""
+        for handler in self.handlers:
+            handler(self, message)
 
     def set_nick(self, new_nick):
         """Set a nick on the network."""

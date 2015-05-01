@@ -40,7 +40,7 @@ class TestRequiredFields(TestCase):
         self.assertEqual(str(cm.exception), expectied)
 
 
-class TestClientOnMessage(TestCase):
+class TestOnMessage(TestCase):
     def test_handlers_called(self):
         """When a message comes in, it should be passed to the handlers."""
         handler = mock.MagicMock()
@@ -52,7 +52,7 @@ class TestClientOnMessage(TestCase):
         handler.assert_called_with(client, message)
 
 
-class TestClientOnConnect(TestCase):
+class TestOnConnect(TestCase):
     def setUp(self):
         """Can't make an IRC connection in tests, so a mock will have to do."""
         self.client = Client(

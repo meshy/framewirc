@@ -91,8 +91,8 @@ class TestSend(ConnectionTestCase):
 class TestSendBatch(ConnectionTestCase):
     def test_send_batch(self):
         messages = [
-            b'PRVMSG meshy :Getting there\r\n',
-            b'PRVMSG meshy :It is almost usable!\r\n',
+            b'PRIVMSG meshy :Getting there\r\n',
+            b'PRIVMSG meshy :It is almost usable!\r\n',
         ]
         self.connection.send_batch(messages)
         calls = self.connection.writer.write.mock_calls

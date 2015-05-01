@@ -1,3 +1,4 @@
+from asyncio import StreamWriter
 from unittest import mock, TestCase
 
 from .utils import BlankClient
@@ -38,7 +39,7 @@ class ConnectionTestCase(TestCase):
             nick='unused',
             real_name='Charlie Denton',
         )
-        self.connection.writer = mock.MagicMock()
+        self.connection.writer = mock.MagicMock(spec=StreamWriter)
 
 
 class TestHandle(ConnectionTestCase):

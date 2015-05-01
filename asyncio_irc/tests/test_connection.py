@@ -60,7 +60,7 @@ class TestSend(ConnectionTestCase):
         self.connection.writer.write.assert_called_with(message)
 
     def test_not_bytes(self):
-        message = 'PRIVMSG meshy :Nice IRC lib you have there\r\n'
+        message = 'PRIVMSG meshy :What µŋhandłed µŋicode yoµ ħave!\r\n'
         with self.assertRaises(MustBeBytes):
             self.connection.send(message)
         self.assertFalse(self.connection.writer.write.called)

@@ -17,6 +17,7 @@ class Client(utils.RequiredAttributesMixin):
         return asyncio.Task(self.connection.connect())
 
     def on_connect(self):
+        """We're connected! Send our identity to the network!"""
         nick = self.nick
         msg = build_message(commands.USER, nick, '0 *', suffix=self.real_name)
         self.connection.send(msg)

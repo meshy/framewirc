@@ -9,7 +9,7 @@ class Connection(utils.RequiredAttributesMixin):
     """
     Communicates with an IRC network.
 
-    Incoming data is sent to `client.handle`.
+    Incoming data is sent to `client.on_message`.
     """
     required_attributes = ('client', 'host')
     port = 6697

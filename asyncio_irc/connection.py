@@ -36,6 +36,7 @@ class Connection(utils.RequiredAttributesMixin):
     def handle(self, raw_message):
         """Dispatch the message to the client."""
         if not raw_message:
+            # A blank message means that the connection has closed.
             self.disconnect()
             return
 

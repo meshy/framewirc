@@ -44,13 +44,31 @@ class ConnectionTestCase(TestCase):
 
 class TestHandle(ConnectionTestCase):
     def test_normal_message(self):
-        """Messages should be passed through to client.on_message()"""
+        """Messages should be passed through to client.on_message()."""
         raw_message = b'PRIVMSG meshy :You should really see this!\r\n'
         self.connection.client = mock.MagicMock(spec=Client)
         self.connection.handle(raw_message)
 
         expected = ReceivedMessage(raw_message)
         self.connection.client.on_message.assert_called_with(expected)
+
+    def test_empty_message_does_not_call_on_message(self):
+        """Do not pass empty messages through to client.on_message()."""
+        self.connection.client = mock.MagicMock(spec=Client)
+        self.connection.handle(b'')
+
+        self.assertFalse(self.connection.client.on_message.called)
+
+    def test_empty_message(self):
+        """
+        Call Connection.disconnect when we empty message received.
+
+        (Empty messages indicate the connection has closed.)
+        """
+        self.connection.disconnect = mock.MagicMock()
+        self.connection.handle(b'')
+
+        self.connection.disconnect.assert_called_with()
 
 
 class TestSend(ConnectionTestCase):

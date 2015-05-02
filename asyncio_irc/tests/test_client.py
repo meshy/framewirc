@@ -12,7 +12,8 @@ class TestConnectTo(TestCase):
     def test_connection_stored(self):
         """Has "connection" been stored on the client?"""
         client = BlankClient()
-        client.connect_to('irc.example.com')
+        with mock.patch('asyncio.Task', spec=asyncio.Task):
+            client.connect_to('irc.example.com')
         self.assertIsInstance(client.connection, Connection)
 
     def test_task_returned(self):

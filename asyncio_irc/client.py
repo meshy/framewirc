@@ -3,7 +3,7 @@ import asyncio
 from . import commands
 from . import utils
 from .connection import Connection
-from .message import build_message
+from .message import build_message, make_privmsgs
 
 
 class Client(utils.RequiredAttributesMixin):
@@ -27,6 +27,9 @@ class Client(utils.RequiredAttributesMixin):
         """Get a message from IRC and send it to all handlers."""
         for handler in self.handlers:
             handler(self, message)
+
+    def privmsg(self, target, message):
+        self.connection.send_batch(make_privmsgs(target, message))
 
     def set_nick(self, new_nick):
         """Set a nick on the network."""

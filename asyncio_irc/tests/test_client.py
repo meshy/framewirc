@@ -74,6 +74,28 @@ class TestOnConnect(TestCase):
         self.client.connection.send.assert_called_with(expected)
 
 
+class TestPrivmsg(TestCase):
+    def test_simple_message(self):
+        client = BlankClient()
+        client.connection = mock.MagicMock(spec=Connection)
+        client.privmsg('#channel', 'Morning, everyone.')
+
+        expected = [b'PRIVMSG #channel :Morning, everyone.\r\n']
+        client.connection.send_batch.assert_called_once_with(expected)
+
+    def test_multiline_message(self):
+        client = BlankClient()
+        client.connection = mock.MagicMock(spec=Connection)
+        client.privmsg('#channel', 'Multi\r\nline\r\nmessage.')
+
+        expected = [
+            b'PRIVMSG #channel :Multi\r\n',
+            b'PRIVMSG #channel :line\r\n',
+            b'PRIVMSG #channel :message.\r\n',
+        ]
+        client.connection.send_batch.assert_called_once_with(expected)
+
+
 class TestSetNick(TestCase):
     """Test the Client.set_nick() method."""
     def setUp(self):

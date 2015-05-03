@@ -61,7 +61,7 @@ class TestOnConnect(TestCase):
             nick='anick',
             real_name='Real Name',
         )
-        self.client.connection = mock.MagicMock()
+        self.client.connection = mock.MagicMock(spec=Connection)
 
     def test_user_command_sent(self):
         self.client.on_connect()
@@ -79,7 +79,7 @@ class TestSetNick(TestCase):
     def setUp(self):
         """Can't make an IRC connection in tests, so a mock will have to do."""
         self.client = BlankClient()
-        self.client.connection = mock.MagicMock()
+        self.client.connection = mock.MagicMock(spec=Connection)
 
     def test_command_sent(self):
         """Should send a message to the network."""

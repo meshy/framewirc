@@ -24,23 +24,6 @@ class TestConnectTo(TestCase):
         self.assertEqual(result, Task(client.connection.connect()))
 
 
-class TestRequiredFields(TestCase):
-    """Test to show that RequiredAttribuesMixin is properly configured."""
-
-    def test_fields(self):
-        """Are the correct fields being checked?"""
-        required = ['handlers', 'real_name', 'nick']
-        self.assertCountEqual(Client.required_attributes, required)
-
-    def test_uses_required_attributes_mixin(self):
-        """Is RequiredAttributesMixin.__init__ actually getting called?"""
-        with self.assertRaises(exceptions.MissingAttributes) as cm:
-            Client()
-
-        expectied = "Required attribute(s) missing: ['handlers', 'real_name', 'nick']"
-        self.assertEqual(str(cm.exception), expectied)
-
-
 class TestOnMessage(TestCase):
     def test_handlers_called(self):
         """When a message comes in, it should be passed to the handlers."""
@@ -94,6 +77,23 @@ class TestPrivmsg(TestCase):
             b'PRIVMSG #channel :message.\r\n',
         ]
         client.connection.send_batch.assert_called_once_with(expected)
+
+
+class TestRequiredFields(TestCase):
+    """Test to show that RequiredAttribuesMixin is properly configured."""
+
+    def test_fields(self):
+        """Are the correct fields being checked?"""
+        required = ['handlers', 'real_name', 'nick']
+        self.assertCountEqual(Client.required_attributes, required)
+
+    def test_uses_required_attributes_mixin(self):
+        """Is RequiredAttributesMixin.__init__ actually getting called?"""
+        with self.assertRaises(exceptions.MissingAttributes) as cm:
+            Client()
+
+        expectied = "Required attribute(s) missing: ['handlers', 'real_name', 'nick']"
+        self.assertEqual(str(cm.exception), expectied)
 
 
 class TestSetNick(TestCase):

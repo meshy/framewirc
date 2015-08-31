@@ -261,3 +261,16 @@ ERR_UNIQOPPRIVSNEEDED = '485'
 ERR_NOOPERHOST = '491'
 ERR_UMODEUNKNOWNFLAG = '501'
 ERR_USERSDONTMATCH = '502'
+
+
+#########
+# Other #
+#########
+
+# Found in responses from freenode
+# Names from https://www.alien.net.au/irc/irc2numerics.html
+# Could not find in a spec.
+RPL_STATSCONN = '250'
+RPL_LOCALUSERS = '265'
+RPL_GLOBALUSERS = '266'
+RPL_CHANNEL_URL = '328'

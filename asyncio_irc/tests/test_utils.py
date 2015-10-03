@@ -94,6 +94,18 @@ class TestChunkMessage(TestCase):
         messages = chunk_message(msg, max_length=20)
         self.assertEqual(messages, expected)
 
+    def test_split_long_unicode(self):
+        """Are words with multi-byte chars split correctly?"""
+        # Repeated failures lead to success.
+        msg = '失敗を繰り返すことで、成功に至る。'
+        expected = [
+            to_bytes('失敗を繰り返'),
+            to_bytes('すことで、成'),
+            to_bytes('功に至る。'),
+        ]
+        messages = chunk_message(msg, max_length=20)
+        self.assertEqual(messages, expected)
+
 
 class TestRequiredAttributesMixin(TestCase):
     """Tests for RequiredAttributesMixin"""

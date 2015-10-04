@@ -1,3 +1,6 @@
 [run]
 source = asyncio_irc
 omit = *tests*
+
+[report]
+skip_covered = true

@@ -1,5 +1,8 @@
 from unittest import TestCase
 
+from hypothesis import given
+from hypothesis.strategies import binary
+
 from .. import exceptions
 from ..utils import chunk_message, RequiredAttributesMixin, to_bytes, to_unicode
 
@@ -31,6 +34,11 @@ class TestToUnicode(TestCase):
     def test_not_bytes_or_string(self):
         with self.assertRaises(AttributeError):
             to_unicode(None)
+
+    @given(binary())
+    def test_for_exceptions(self, bytestring):
+        """Use hypothesis to try to make it break!"""
+        to_unicode(bytestring)
 
 
 class TestToBytes(TestCase):

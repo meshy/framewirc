@@ -54,8 +54,8 @@ def to_unicode(bytestring):
             raise
         return bytestring
     except UnicodeDecodeError:
-        charset = cchardet.detect(bytestring)['encoding']
-        return bytestring.decode(charset)
+        charset = cchardet.detect(bytestring)['encoding'] or 'utf-8'
+        return bytestring.decode(charset, 'surrogateescape')
 
 
 def to_bytes(string):

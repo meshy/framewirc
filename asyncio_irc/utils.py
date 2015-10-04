@@ -46,7 +46,7 @@ class RequiredAttributesMixin:
 
 
 def to_unicode(bytestring):
-    """Try to decode as UTF8, then fall back to cchatdet."""
+    """Try to decode as UTF8, then fall back to cchardet."""
     try:
         return bytestring.decode()
     except AttributeError:

@@ -20,7 +20,7 @@ setup(
     description='An asynchronous IRC framework/library based upon asyncio',
     include_package_data=True,
     install_requires=[
-        'cchardet>=0.3.5,<0.4',
+        'cchardet>=0.3.5,<2',
     ],
     name='asyncio-irc',
     packages=['asyncio_irc'],

@@ -9,13 +9,13 @@ from framewirc.utils import to_unicode
 
 raw_commands = (
     commands.NOTICE,
+    commands.RPL_CREATED,
+    commands.RPL_ENDOFMOTD,
+    commands.RPL_MOTD,
+    commands.RPL_MOTDSTART,
+    commands.RPL_MYINFO,
     commands.RPL_WELCOME,
     commands.RPL_YOURHOST,
-    commands.RPL_CREATED,
-    commands.RPL_MYINFO,
-    commands.RPL_MOTDSTART,
-    commands.RPL_MOTD,
-    commands.RPL_ENDOFMOTD,
 )
 
 

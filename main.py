@@ -40,6 +40,7 @@ class MyClient(Client):
     nick = 'meshybot'
     real_name = 'MeshyBot7'
 
+
 if __name__ == '__main__':
     MyClient().connect_to('leguin.freenode.net')
     asyncio.get_event_loop().run_forever()

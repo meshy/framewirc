@@ -1,3 +1,4 @@
+"""Convert me into a quickstart or turn me into docs!"""
 import asyncio
 
 from framewirc import commands, handlers

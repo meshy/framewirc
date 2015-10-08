@@ -1,9 +1,9 @@
 import asyncio
 
-from asyncio_irc import commands, handlers
-from asyncio_irc.client import Client
-from asyncio_irc.filters import command_blacklist, command_whitelist
-from asyncio_irc.utils import to_unicode
+from framewirc import commands, handlers
+from framewirc.client import Client
+from framewirc.filters import command_blacklist, command_whitelist
+from framewirc.utils import to_unicode
 
 
 raw_commands = (

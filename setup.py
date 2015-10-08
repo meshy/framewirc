@@ -22,8 +22,8 @@ setup(
     install_requires=[
         'cchardet>=0.3.5,<2',
     ],
-    name='asyncio-irc',
-    packages=['asyncio_irc'],
-    url='https://github.com/meshy/asyncio-irc/',
+    name='framewirc',
+    packages=['framewirc'],
+    url='https://github.com/meshy/framewirc/',
     version=version,
 )

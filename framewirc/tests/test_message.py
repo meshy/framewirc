@@ -178,7 +178,7 @@ class TestMakePrivMsgs(TestCase):
     def test_max_length(self):
         """Is the correct max_length calculated?"""
         msg = 'A test message'
-        with mock.patch('asyncio_irc.message.chunk_message') as chunk_message:
+        with mock.patch('framewirc.message.chunk_message') as chunk_message:
             make_privmsgs('meshy', msg)
 
         expected_max = 495  # 512 - len(r'PRIVMSG meshy :' + '\r\n')

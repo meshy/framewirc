@@ -23,7 +23,7 @@ class TestRequiredFields(TestCase):
     def test_uses_required_attributes_mixin(self):
         """Is RequiredAttributesMixin.__init__ actually getting called?"""
         kwargs = {'host': 'example.com'}
-        path = 'asyncio_irc.utils.RequiredAttributesMixin.__init__'
+        path = 'framewirc.utils.RequiredAttributesMixin.__init__'
         with mock.patch(path, return_value=None) as mixin_init:
             Connection(**kwargs)
 

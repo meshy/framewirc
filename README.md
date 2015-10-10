@@ -95,4 +95,17 @@ Features that I am hoping to implement in future:
   In particular, I would like to call handlers with more intelligent kwargs
   when dealing with known types of events. This might mean that a handler of
   `PRIVMSG`s is sent `client, sender, recipient, text` rather than just
-  `client, message`.
+  `client, message`. That `sender` might also need some special treatment as
+  the names of other users are often sent as `username!ident@host.example.com`
+  but need to be replied to as simply `username`.
+
+- Handle more text encodings.
+
+  At the moment, the `to_unicode` method is a little prone to errors when
+  `cChardet` provides a [non standard encoding][cchardet].
+
+- Find a nicely overridable way to remove the `basic_handlers` boilerplate from
+  `Client` subclasses that still allows ways to customise the behaviour.
+
+
+[cchardet]: https://github.com/PyYoshi/cChardet/issues/13

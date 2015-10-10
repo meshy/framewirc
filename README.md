@@ -9,9 +9,12 @@ Focuses on allowing the developer to pick only as much of the stack as required.
 
 ## Installation
 
-
+```bash
+pip install framewirc
+```
 
 ## Rationale
+
 
 
 

@@ -88,7 +88,7 @@ messages in both directions must adhere to the (simple) rules:
   ```
 
   We represent these raw messages with our own subclass of `bytes` called
-  `RecievedMessage`. It has `prefix`, `command`, parameters`, and `suffix`
+  `RecievedMessage`. It has `prefix`, `command`, `parameters`, and `suffix`
   added for convinience. Each of these attributes represents the relevant
   message parts as a unicode string (except `parameters`, which is a tuple of
   strings).

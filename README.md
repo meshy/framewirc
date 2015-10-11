@@ -66,12 +66,11 @@ asyncio.get_event_loop().run_forever()
 ## Concepts
 
 Unfortunately, there's no ["One True Way"][xkcd-standards] when it comes to
-IRC. Many networks and servers seem to have their own way of doing things that
-are not entirely compatible with the others. There's nothing wrong with this,
-exactly, but it does mean that until this library is a little more mature, it
-might not correctly deal with all these eccentricities. If you find an issue
-that is not correctly dealt with, please [log an issue on
-github][github-issues].
+IRC. Many networks and servers have their own way of doing things that are not
+entirely compatible with the others. There's nothing wrong with this, exactly,
+but it does mean that until this library is a little more mature, it might not
+correctly deal with all these eccentricities. If you find an issue that is not
+correctly dealt with, please [log an issue on github][github-issues].
 
 
 ### IRC message format

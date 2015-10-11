@@ -98,6 +98,16 @@ messages in both directions must adhere to the (simple) rules:
   This means that when we want to send something longer, we have to split it up
   into smaller chunks. This can be done using `utils.chunk_message`.
 
+- There is no one accepted standard.
+
+  Unfortunately, there's no ["One True Way"][xkcd-standards] when it comes to
+  IRC. Many networks and servers seem to have their own way of doing things
+  that are not entirely compatible with the others. There's nothing wrong with
+  this, exactly, but it does mean that until this library is a little more
+  mature, it might not correctly deal with all these eccentricities. If you
+  find an issue that is not correctly dealt with, please [log an issue on
+  github][github-issues].
+
 ## Modules
 
 ### `client`
@@ -141,3 +151,5 @@ Features that I am hoping to implement in future:
 
 [cchardet-home]: https://github.com/PyYoshi/cChardet/
 [cchardet-issue-13]: https://github.com/PyYoshi/cChardet/issues/13
+[github-issues]: https://github.com/meshy/framewirc/issues/
+[xkcd-standards]: https://xkcd.com/927/

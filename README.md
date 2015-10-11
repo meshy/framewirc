@@ -110,13 +110,10 @@ messages in both directions must adhere to the (simple) rules:
 
 ### Connecting
 
-To connect to an IRC network, you will generally create a `Client` object, and
-tell it to `connect_to` the network of your choice. This in turn creates a
-`Connection`, and an `asyncio.Task` that will be invoked in the event loop.
-
-Once the loop is underway the `Connection` will attempt
-to connect to the network. The `Client` will be responsible for sending a nick
-and real name once it has.
+To connect to an IRC network, create a `Client` object, and call its
+`connect_to` method to join the network of your choice. This creates a
+`Connection`, and an `asyncio.Task` that will be invoked in the event loop. The
+`Client` will be responsible for sending a nick and real name once it has.
 
 If there are any actions that need to be completed on connection, this is
 probably the time to do it. The `Client.on_connect` method can be overridden to

@@ -108,6 +108,48 @@ messages in both directions must adhere to the (simple) rules:
   into smaller chunks. This can be done using `utils.chunk_message`.
 
 
+### Connecting
+
+To connect to an IRC network, you will generally create a `Client` object, and
+tell it to `connect_to` the network of your choice. This in turn creates a
+`Connection`, and an `asyncio.Task` that will be invoked in the event loop.
+
+Once the loop has started (or if it already has), the `Connection` will attempt
+to connect to the network. Once it does, the `Client` will be responsible for
+completing the process by telling the network the nick and real name of the
+client.
+
+If there are any actions that need to be completed on connection, this is
+probably the time to do it. The `Client.on_connect` method can be overridden to
+add things like connecting to particular rooms, or sending a password to an
+authentication bot. (Don't forget to call `super` though!)
+
+
+### Handling messages
+
+When the `Connection` receives a message, the `Client` will send that message
+(and itself) to every one of its `handers` in turn. This allows them to make a
+decision about how they will deal with the message.
+
+As most of your handlers will not need to deal with every message that comes
+in, we can remove the boilerplate of `if message.command == MYCOMMAND` through
+use of the decorators in the `filters` module. The `command_whitelist` filter
+only allows messages through to the handler that are in its whitelist. The
+`command_blacklist` does the opposite. eg:
+
+```python
+# Rather than this:
+def my_command_handler(client, message):
+    if message.command != MYCOMMAND:
+        return
+    do_useful_logic(message)
+
+# It's nicer to have this:
+@command_whitelist(MYCOMMAND):
+def my_simpler_command_handler(client, message):
+    do_useful_logic(message)
+```
+
 
 ## Modules
 

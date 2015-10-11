@@ -114,7 +114,7 @@ To connect to an IRC network, you will generally create a `Client` object, and
 tell it to `connect_to` the network of your choice. This in turn creates a
 `Connection`, and an `asyncio.Task` that will be invoked in the event loop.
 
-Once the loop has started, or if it already has, the `Connection` will attempt
+Once the loop is underway the `Connection` will attempt
 to connect to the network. The `Client` will be responsible for sending a nick
 and real name once it has.
 

@@ -95,16 +95,17 @@ messages in both directions must adhere to the (simple) rules:
   :colon-indicated-prefix COMMAND some parameters :Suffix following the colon
   ```
 
-  We represent these raw messages with our own subclass of `bytes` called
-  `ReceivedMessage`. It has `prefix`, `command`, `parameters`, and `suffix`
-  added for convinience. Each of these attributes represents the relevant
-  message parts as a unicode string (except `parameters`, which is a tuple of
-  strings).
+  We represent the messages that come from the network with our own subclass of
+  `bytes` called `ReceivedMessage`. It has `prefix`, `command`, `parameters`,
+  and `suffix` added for convinience. Each of these attributes represents the
+  relevant message parts as a unicode string (except `parameters`, which is a
+  tuple of strings).
 
 - Messages have a maximum length of 512 bytes.
 
-  This means that when we want to send something longer, we have to split it up
-  into smaller chunks. This can be done using `utils.chunk_message`.
+  This means that when we want to send something longer to the network, we have
+  to split it up into smaller chunks. This can be done using
+  `utils.chunk_message`.
 
 
 ### Connecting

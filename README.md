@@ -115,8 +115,8 @@ tell it to `connect_to` the network of your choice. This in turn creates a
 `Connection`, and an `asyncio.Task` that will be invoked in the event loop.
 
 Once the loop has started, or if it already has, the `Connection` will attempt
-to connect to the network. Once it has, the `Client` will be responsible for
-telling the network the nick and real name of the client.
+to connect to the network. The `Client` will be responsible for sending a nick
+and real name once it has.
 
 If there are any actions that need to be completed on connection, this is
 probably the time to do it. The `Client.on_connect` method can be overridden to

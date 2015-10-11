@@ -65,7 +65,38 @@ asyncio.get_event_loop().run_forever()
 
 ## Concepts
 
+### IRC message format
 
+It's probably useful to have some idea of how the IRC protocol works. All
+messages in both directions must adhere to the (simple) rules:
+
+- Messages are represented as bytes.
+
+  There is no default encoding, so sometimes one just has to guess! To guess
+  how to turn these streams of bytes into Python strings, we have elected to
+  use [`cChardet`][cchardet-home] for this in `utils.to_unicode`.
+
+- Messages have a relatively simple structure.
+
+  Generally, a message can be seen to have four distinct parts: a prefix, a
+  command, a number of parameters, and a suffix. The parts that are required
+  depend on the command. Only the command is always required. This is the
+  structure of a message:
+
+  ```
+  :colon-indicated-prefix COMMAND some parameters :Suffix following the colon
+  ```
+
+  We represent these raw messages with our own subclass of `bytes` called
+  `RecievedMessage`. It has `prefix`, `command`, parameters`, and `suffix`
+  added for convinience. Each of these attributes represents the relevant
+  message parts as a unicode string (except `parameters`, which is a tuple of
+  strings).
+
+- Messages have a maximum length of 512 bytes.
+
+  This means that when we want to send something longer, we have to split it up
+  into smaller chunks. This can be done using `utils.chunk_message`.
 
 ## Modules
 
@@ -102,10 +133,11 @@ Features that I am hoping to implement in future:
 - Handle more text encodings.
 
   At the moment, the `to_unicode` method is a little prone to errors when
-  `cChardet` provides a [non standard encoding][cchardet].
+  `cChardet` provides a [non standard encoding][cchardet-issue-13].
 
 - Find a nicely overridable way to remove the `basic_handlers` boilerplate from
   `Client` subclasses that still allows ways to customise the behaviour.
 
 
-[cchardet]: https://github.com/PyYoshi/cChardet/issues/13
+[cchardet-home]: https://github.com/PyYoshi/cChardet/
+[cchardet-issue-13]: https://github.com/PyYoshi/cChardet/issues/13

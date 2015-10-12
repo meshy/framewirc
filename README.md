@@ -13,10 +13,6 @@ Focuses on allowing the developer to pick only as much of the stack as required.
 pip install framewirc
 ```
 
-## Rationale
-
-
-
 
 ## Quickstart
 
@@ -159,25 +155,6 @@ byte string, and pass it to `Connection.send`. You will probably not want to do
 this by hand, so use the `utils.build_message` method to help you.
 
 
-## Modules
-
-### `client`
-
-### `commands`
-
-### `connection`
-
-### `exceptions`
-
-### `filters`
-
-### `handlers`
-
-### `message`
-
-### `utils`
-
-
 ## Still to come
 
 Features that I am hoping to implement in future:
@@ -199,6 +176,11 @@ Features that I am hoping to implement in future:
 - Find a nicely overridable way to remove the `basic_handlers` boilerplate from
   `Client` subclasses that still allows ways to customise the behaviour.
 
+- Full API documentation.
+
+  I would really like to document the full API, not just the basics. I'd also
+  like to explain my rationale for the design decisions I took, and why I feel
+  that they are an improvement on what is currently available elsewhere.
 
 [cchardet-home]: https://github.com/PyYoshi/cChardet/
 [cchardet-issue-13]: https://github.com/PyYoshi/cChardet/issues/13

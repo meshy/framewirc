@@ -121,7 +121,7 @@ add things like connecting to particular rooms, or sending a password to an
 authentication bot. (Don't forget to call `super` though!)
 
 
-### Handling messages
+### Handling commands from the network
 
 When the `Connection` receives a message, the `Client` will send that message
 (and itself) to every one of its `handers` in turn. This allows them to make a

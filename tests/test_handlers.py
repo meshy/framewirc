@@ -1,7 +1,7 @@
 from unittest import mock, TestCase
 
-from .. import handlers
-from ..message import ReceivedMessage
+from framewirc import handlers
+from framewirc.message import ReceivedMessage
 
 
 class TestPing(TestCase):

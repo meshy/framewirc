@@ -1,16 +1,17 @@
 from asyncio import StreamWriter
 from unittest import mock, TestCase
 
-from .utils import BlankClient
-from ..client import Client
-from ..connection import Connection
-from ..exceptions import (
+from framewirc.client import Client
+from framewirc.connection import Connection
+from framewirc.exceptions import (
     MessageTooLong,
     MustBeBytes,
     NoLineEnding,
     StrayLineEnding,
 )
-from ..message import ReceivedMessage
+from framewirc.message import ReceivedMessage
+
+from .utils import BlankClient
 
 
 class TestRequiredFields(TestCase):

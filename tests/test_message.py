@@ -1,8 +1,8 @@
 from itertools import product
 from unittest import mock, TestCase
 
-from .. import exceptions
-from ..message import build_message, make_privmsgs, ReceivedMessage
+from framewirc import exceptions
+from framewirc.message import build_message, make_privmsgs, ReceivedMessage
 
 
 class TestReceivedMessage(TestCase):

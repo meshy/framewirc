@@ -1,7 +1,7 @@
-from setuptools import setup
+from setuptools import find_packages, setup
 
 
-version = '0.0.1a1'
+version = '0.0.1'
 
 
 setup(
@@ -24,7 +24,7 @@ setup(
         'cchardet>=0.3.5,<2',
     ],
     name='framewirc',
-    packages=['framewirc'],
+    packages=find_packages(exclude=['tests']),
     url='https://github.com/meshy/framewirc/',
     version=version,
 )

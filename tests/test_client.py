@@ -1,11 +1,12 @@
 import asyncio
 from unittest import mock, TestCase
 
+from framewirc import exceptions
+from framewirc.client import Client
+from framewirc.connection import Connection
+from framewirc.message import ReceivedMessage
+
 from .utils import BlankClient
-from .. import exceptions
-from ..client import Client
-from ..connection import Connection
-from ..message import ReceivedMessage
 
 
 class TestConnectTo(TestCase):

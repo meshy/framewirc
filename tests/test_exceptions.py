@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from .. import exceptions
+from framewirc import exceptions
 
 
 class MissingAttributesTest(TestCase):

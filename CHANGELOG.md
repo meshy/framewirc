@@ -3,7 +3,7 @@
 This project is in alpha. I plan to adhere to [semantic versioning][semver]
 once the API is stable.
 
-## v0.0.1 (in progress)
+## v0.0.1
 
 Initial release.
 

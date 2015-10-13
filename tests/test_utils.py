@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from hypothesis import given
+from hypothesis import example, given
 from hypothesis.strategies import binary
 
 from framewirc import exceptions
@@ -36,6 +36,7 @@ class TestToUnicode(TestCase):
             to_unicode(None)
 
     @given(binary())
+    @example(b'\xc5\xa1\xc4\xa1\xc5\xc3\xc4\xa1\xc4\xa1')  # Gets recognised as EUC-TW
     def test_for_exceptions(self, bytestring):
         """Use hypothesis to try to make it break!"""
         to_unicode(bytestring)

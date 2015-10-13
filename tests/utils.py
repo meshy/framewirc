@@ -1,4 +1,4 @@
-from ..client import Client
+from framewirc.client import Client
 
 
 class BlankClient(Client):

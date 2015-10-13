@@ -1,7 +1,7 @@
 from unittest import mock, TestCase
 
-from .. import filters
-from ..message import ReceivedMessage
+from framewirc import filters
+from framewirc.message import ReceivedMessage
 
 
 class TestCommandBlacklist(TestCase):

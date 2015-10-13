@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from .. import exceptions
-from ..utils import chunk_message, RequiredAttributesMixin, to_bytes, to_unicode
+from framewirc import exceptions
+from framewirc.utils import chunk_message, RequiredAttributesMixin, to_bytes, to_unicode
 
 
 class TestToUnicode(TestCase):

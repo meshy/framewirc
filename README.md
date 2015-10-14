@@ -37,7 +37,7 @@ quips = {
 }
 
 
-@filters.command_whitelist(PRIVMSG)
+@filters.allow(PRIVMSG)
 def snarky_response(client, message):
     # See section "Still to come" for ideas on how this could be simplified.
     sender = message.prefix.split('!')[0]
@@ -125,9 +125,9 @@ decision about how they will deal with the message.
 
 As most of your handlers will not need to deal with every message that comes
 in, we can remove the boilerplate of `if message.command == MYCOMMAND` through
-use of the decorators in the `filters` module. The `command_whitelist` filter
-only allows messages through to the handler that are in its whitelist. The
-`command_blacklist` does the opposite. eg:
+use of the decorators in the `filters` module. The `allow` filter only allows
+messages through to the handler that are in its whitelist. The `deny` filter
+does the opposite. eg:
 
 ```python
 # Rather than this:
@@ -137,7 +137,7 @@ def my_command_handler(client, message):
     do_useful_logic(message)
 
 # It's nicer to have this:
-@command_whitelist(MYCOMMAND):
+@allow(MYCOMMAND):
 def my_simpler_command_handler(client, message):
     do_useful_logic(message)
 ```

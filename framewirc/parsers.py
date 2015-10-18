@@ -10,7 +10,6 @@ def nick(raw_nick):
 
         ~nick@hostname
     """
-
     if '!' in raw_nick:
         nick, _rest = raw_nick.split('!')
         ident, host = _rest.split('@')

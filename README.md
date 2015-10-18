@@ -29,6 +29,7 @@ from framewirc import filters
 from framewirc.client import Client
 from framewirc.commands import PRIVMSG
 from framewirc.handlers import basic_handlers
+from framewirc.parsers import nick
 
 
 quips = {
@@ -40,7 +41,7 @@ quips = {
 @filters.command_whitelist(PRIVMSG)
 def snarky_response(client, message):
     # See section "Still to come" for ideas on how this could be simplified.
-    sender = message.prefix.split('!')[0]
+    sender = nick(message.prefix)['nick']
     text = message.suffix
 
     for trigger, reposte in quips.items():

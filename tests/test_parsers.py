@@ -6,9 +6,7 @@ from framewirc.parsers import nick
 class TestNick(TestCase):
     """The nick parser can deal with several nick formats."""
     def test_nick_with_ident(self):
-        raw_nick = 'nickname!ident@hostname'
-
-        result = nick(raw_nick)
+        result = nick('nickname!ident@hostname')
 
         expected = {
             'nick': 'nickname',
@@ -18,9 +16,7 @@ class TestNick(TestCase):
         self.assertEqual(result, expected)
 
     def test_nick_without_ident(self):
-        raw_nick = '~nickname@hostname'
-
-        result = nick(raw_nick)
+        result = nick('~nickname@hostname')
 
         expected = {
             'nick': 'nickname',

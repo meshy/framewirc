@@ -1,6 +1,7 @@
 from unittest import TestCase
 
-from framewirc.parsers import is_channel, nick
+from framewirc.message import build_message, ReceivedMessage
+from framewirc.parsers import is_channel, nick, privmsg
 
 
 class TestIsChannel(TestCase):
@@ -69,3 +70,52 @@ class TestNick(TestCase):
             'host': 'hostname',
         }
         self.assertEqual(result, expected)
+
+
+class TestPrivmsg(TestCase):
+    sender = b'sender!ident@hostname'
+
+    def processed_message(self, target=b'#target', sender=b'nick!ident@host'):
+        """Build a PRIVMSG, and process it with parsers.privmsg."""
+        body = 'message body'
+        message = build_message('PRIVMSG', target, prefix=sender, suffix=body)
+        return privmsg(ReceivedMessage(message))
+
+    def test_text(self):
+        """The message suffix is the 'raw_body'."""
+        result = self.processed_message()
+
+        self.assertEqual(result['raw_body'], b'message body')
+
+    def test_raw_sender(self):
+        """The 'raw_sender' key is populated by the message prefix."""
+        result = self.processed_message()
+
+        self.assertEqual(result['raw_sender'], 'nick!ident@host')
+
+    def test_sender_nick(self):
+        result = self.processed_message()
+
+        self.assertEqual(result['sender_nick'], 'nick')
+
+    def test_target(self):
+        """The 'target' key is populated by the message params."""
+        result = self.processed_message()
+
+        self.assertEqual(result['target'], '#target')
+
+    def test_channel_when_channel(self):
+        """When sent to a channel, the 'channel' should reflect that."""
+        target = '#channel'
+        result = self.processed_message(target=target)
+
+        self.assertEqual(result['channel'], target)
+
+    def test_channel_when_direct(self):
+        """When sent directly to a user, the 'channel' is the sender."""
+        target = 'targetUser'
+        sender_nick = 'senderUser'
+        sender = sender_nick + '!ident@hostname'
+        result = self.processed_message(target=target, sender=sender)
+
+        self.assertEqual(result['channel'], sender_nick)

@@ -14,6 +14,11 @@ once the API is stable.
   A function that takes a `nick!ident@host` string (or similar), and returns a
   dictionary of components.
 
+- ADDED: `parsers.privmsg`.
+
+  A function that splits a `PRIVMSG` command into a dictionary of semantically
+  named attributes.
+
 
 ## v0.0.1
 

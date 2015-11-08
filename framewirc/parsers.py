@@ -46,3 +46,28 @@ def nick(raw_nick):
         'ident': ident,
         'host': host,
     }
+
+
+def privmsg(message):
+    """
+    Split received PRIVMSG command into a dictionary of parts.
+
+    When the message target is a channel, 'channel' is set to that. Otherwise,
+    'channel' is defined as the sender's nick.
+    """
+    target = message.params[0]
+    raw_sender = message.prefix
+    sender_nick = nick(raw_sender)['nick']
+
+    if is_channel(target):
+        channel = target
+    else:
+        channel = sender_nick
+
+    return {
+        'channel': channel,
+        'raw_body': message.suffix,
+        'raw_sender': raw_sender,
+        'sender_nick': sender_nick,
+        'target': target,
+    }

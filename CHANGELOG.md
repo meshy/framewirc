@@ -5,6 +5,10 @@ once the API is stable.
 
 ## Unreleased
 
+- ADDED: `parsers.is_channel`.
+
+  A function to determine of a string is a valid channel name.
+
 - ADDED: `parsers.nick`.
 
   A function that takes a `nick!ident@host` string (or similar), and returns a

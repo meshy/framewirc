@@ -23,6 +23,7 @@ class TestIsChannel(TestCase):
         self.assertTrue(is_channel('+channel'))
 
     def test_starts_with_alpha_char(self):
+        """False when starts with a normal char."""
         self.assertFalse(is_channel('channel'))
 
     def test_50_chars(self):
@@ -94,6 +95,7 @@ class TestPrivmsg(TestCase):
         self.assertEqual(result['raw_sender'], 'nick!ident@host')
 
     def test_sender_nick(self):
+        """The `sender_nick` key is the sender's nick."""
         result = self.processed_message()
 
         self.assertEqual(result['sender_nick'], 'nick')

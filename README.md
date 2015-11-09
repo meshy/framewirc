@@ -94,9 +94,10 @@ messages in both directions must adhere to the (simple) rules:
 
   We represent the messages that come from the network with our own subclass of
   `bytes` called `ReceivedMessage`. It has `prefix`, `command`, `parameters`,
-  and `suffix` added for convinience. Each of these attributes represents the
-  relevant message parts as a unicode string (except `parameters`, which is a
-  tuple of strings).
+  and `suffix` added for convinience. The `prefix` and `command` parts are
+  represented as unicode strings, `parameters`is a tuple of unicode strings,
+  but `suffix` is a bytestring. This allows for custom logic in decoding
+  arbitrary text from the network.
 
 - Messages have a maximum length of 512 bytes.
 

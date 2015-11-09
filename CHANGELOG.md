@@ -5,6 +5,12 @@ once the API is stable.
 
 ## Unreleased
 
+- CHANGED: `ReceivedMessage.suffix`
+
+  This is no longer a unicode string, as it was too presumptious to guess the
+  encoding. This is now left to the programmer to decide, allowing them to do
+  things such as change default encoding per channel.
+
 - ADDED: `parsers.is_channel`.
 
   A function to determine of a string is a valid channel name.

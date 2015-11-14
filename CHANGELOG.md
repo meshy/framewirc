@@ -5,6 +5,10 @@ once the API is stable.
 
 ## Unreleased
 
+- CHANGED: Renamed `filters.command_blacklist` to `filters.deny`.
+
+- CHANGED: Renamed `filters.command_whitelist` to `filters.allow`.
+
 - CHANGED: `ReceivedMessage.suffix`
 
   This is no longer a unicode string, as it was too presumptious to guess the

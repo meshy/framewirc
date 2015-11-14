@@ -29,6 +29,7 @@ from framewirc import filters
 from framewirc.client import Client
 from framewirc.commands import PRIVMSG
 from framewirc.handlers import basic_handlers
+from framewirc.parsers import nick
 
 
 quips = {
@@ -40,8 +41,8 @@ quips = {
 @filters.allow(PRIVMSG)
 def snarky_response(client, message):
     # See section "Still to come" for ideas on how this could be simplified.
-    sender = message.prefix.split('!')[0]
-    text = message.suffix
+    sender = nick(message.prefix)['nick']
+    text = to_unicode(message.suffix)
 
     for trigger, reposte in quips.items():
         if trigger in text:
@@ -93,9 +94,10 @@ messages in both directions must adhere to the (simple) rules:
 
   We represent the messages that come from the network with our own subclass of
   `bytes` called `ReceivedMessage`. It has `prefix`, `command`, `parameters`,
-  and `suffix` added for convinience. Each of these attributes represents the
-  relevant message parts as a unicode string (except `parameters`, which is a
-  tuple of strings).
+  and `suffix` added for convinience. The `prefix` and `command` parts are
+  represented as unicode strings, `parameters`is a tuple of unicode strings,
+  but `suffix` is a bytestring. This allows for custom logic in decoding
+  arbitrary text from the network.
 
 - Messages have a maximum length of 512 bytes.
 

@@ -33,7 +33,7 @@ class TestReceivedMessage(TestCase):
 
                 expected_prefix = 'prefixed-data' if prefix else ''
                 expected_params = ('param1', 'param2') if params else ()
-                expected_suffix = 'suffix message' if suffix else ''
+                expected_suffix = b'suffix message' if suffix else b''
 
                 self.assertEqual(message.command, 'COMMAND')
                 self.assertEqual(message.prefix, expected_prefix)

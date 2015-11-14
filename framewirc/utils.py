@@ -47,12 +47,12 @@ class RequiredAttributesMixin:
 
 def to_unicode(bytestring):
     """Try to decode as UTF8, then fall back to cchardet."""
+    # If we already have a unicode string, just return it.
+    if isinstance(bytestring, str):
+        return bytestring
+
     try:
         return bytestring.decode()
-    except AttributeError:
-        if not isinstance(bytestring, str):
-            raise
-        return bytestring
     except UnicodeDecodeError:
         charset = cchardet.detect(bytestring)['encoding'] or 'utf-8'
         return bytestring.decode(charset, 'surrogateescape')

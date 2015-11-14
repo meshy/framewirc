@@ -15,7 +15,7 @@ class TestIsChannel(TestCase):
         self.assertTrue(is_channel('!channel'))
 
     def test_starts_with_hash(self):
-        """True when starts with a # ("hash", AKA "pound")."""
+        """True when starts with a # ("hash" AKA "pound")."""
         self.assertTrue(is_channel('#channel'))
 
     def test_starts_with_plus(self):

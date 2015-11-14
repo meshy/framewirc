@@ -46,7 +46,7 @@ class RequiredAttributesMixin:
 
 
 def to_unicode(bytestring):
-    """Try to decode as UTF8, then fall back to cchardet."""
+    """Try to convert a string of bytes into a unicode string."""
     # If we already have a unicode string, just return it.
     if isinstance(bytestring, str):
         return bytestring

@@ -42,7 +42,7 @@ quips = {
 def snarky_response(client, message):
     # See section "Still to come" for ideas on how this could be simplified.
     sender = nick(message.prefix)['nick']
-    text = message.suffix
+    text = to_unicode(message.suffix)
 
     for trigger, reposte in quips.items():
         if trigger in text:

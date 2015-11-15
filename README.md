@@ -30,6 +30,7 @@ from framewirc.client import Client
 from framewirc.commands import PRIVMSG
 from framewirc.handlers import basic_handlers
 from framewirc.parsers import nick
+from framewirc.utils import to_unicode
 
 
 quips = {

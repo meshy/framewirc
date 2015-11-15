@@ -53,7 +53,7 @@ class TestToUnicode(TestCase):
         """
         An expected decoding can be wrong, and not throw errors.
 
-        Perhaps not "okay", but I don't know if it's possible to catch this.
+        Perhaps not ideal, but I don't know if it's possible to catch this.
         """
         text = b'Ume\xe5'
         expected = 'Umeĺ'  # Decoding incorrectly throws no error in this case

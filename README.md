@@ -41,10 +41,10 @@ quips = {
 @filters.command_whitelist(PRIVMSG)
 @parsers.to_kwargs(parsers.privmsg)
 def snarky_response(client, channel, raw_body, **kwargs):
-    text = to_unicode(raw_body)
+    body = to_unicode(raw_body)
 
     for trigger, reposte in quips.items():
-        if trigger in text:
+        if trigger in body:
             client.privmsg(channel, reposte)
 
 

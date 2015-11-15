@@ -79,7 +79,8 @@ messages in both directions must adhere to the (simple) rules:
 
   There is no default encoding, so sometimes one just has to guess! To guess
   how to turn these streams of bytes into Python strings, we have elected to
-  use [`cChardet`][cchardet-home] for this in `utils.to_unicode`.
+  use [`cChardet`][cchardet-home] in `utils.to_unicode` when utf8 fails. If you
+  know the encoding, you can override this behaviour.
 
 - Messages have a relatively simple structure.
 

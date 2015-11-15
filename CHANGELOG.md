@@ -25,6 +25,11 @@ once the API is stable.
   A function that splits a `PRIVMSG` command into a dictionary of semantically
   named attributes.
 
+- ADDED: `parsers.to_kwargs`
+
+  A handler decorator that takes a parser, and passes the resulting dictionary
+  to the handler as kwargs.
+
 - ADDED: `utils.to_unicode` now takes encoding suggestions.
 
   An iterable of Preferred character encodings can now be passed in.

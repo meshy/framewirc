@@ -22,6 +22,12 @@ class TestToUnicode(TestCase):
         result = to_unicode(text)
         self.assertEqual(result, expected)
 
+    def test_utf8(self):
+        text = b"Rhoi'r ffidil yn y t\xc3\xb4"
+        expected = "Rhoi'r ffidil yn y tô"
+        result = to_unicode(text)
+        self.assertEqual(result, expected)
+
     def test_windows_1250(self):
         text = b'Miko\xb3aj Kopernik'
         expected = 'Mikołaj Kopernik'

@@ -22,6 +22,12 @@ class TestToUnicode(TestCase):
         result = to_unicode(text)
         self.assertEqual(result, expected)
 
+    def test_utf8(self):
+        text = b"Rhoi'r ffidil yn y t\xc3\xb4"
+        expected = "Rhoi'r ffidil yn y tô"
+        result = to_unicode(text)
+        self.assertEqual(result, expected)
+
     def test_windows_1250(self):
         text = b'Miko\xb3aj Kopernik'
         expected = 'Mikołaj Kopernik'
@@ -31,6 +37,35 @@ class TestToUnicode(TestCase):
     def test_not_bytes_or_string(self):
         with self.assertRaises(AttributeError):
             to_unicode(None)
+
+    def test_expected_decoding_first(self):
+        """
+        An undecoded bytestring will try "expected" before utf8.
+
+        This is because some non-UTF8 strings can be "valid" utf8.
+        """
+        text = b'\x1b$BEl5~ET\x1b(B'
+        expected = '東京都'  # as opposed to '\x1b$BEl5~ET\x1b(B'
+        result = to_unicode(text, ['iso-2022-jp'])
+        self.assertEqual(result, expected)
+
+    def test_expected_decoding_quietly_wrong(self):
+        """
+        An expected decoding can be wrong, and not throw errors.
+
+        Perhaps not ideal, but I don't know if it's possible to catch this.
+        """
+        text = b'Ume\xe5'
+        expected = 'Umeĺ'  # Decoding incorrectly throws no error in this case
+        result = to_unicode(text, ['windows_1250'])
+        self.assertEqual(result, expected)
+
+    def test_expected_decoding_loudly_wrong(self):
+        """An expected decoding can fall back to another encoding."""
+        text = b'\xff\xfe\xb5\x03\xbb\x03\xbb\x03\xb7\x03\xbd\x03\xb9\x03\xba\x03\xac\x03'
+        expected = 'ελληνικά'
+        result = to_unicode(text, ['iso-2022-jp', 'utf16'])  # `text` is utf16
+        self.assertEqual(result, expected)
 
 
 class TestToBytes(TestCase):

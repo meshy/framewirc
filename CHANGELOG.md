@@ -25,6 +25,9 @@ once the API is stable.
   A function that splits a `PRIVMSG` command into a dictionary of semantically
   named attributes.
 
+- ADDED: `utils.to_unicode` now takes encoding suggestions.
+
+  An iterable of Preferred character encodings can now be passed in.
 
 ## v0.0.1
 

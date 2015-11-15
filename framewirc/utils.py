@@ -45,19 +45,28 @@ class RequiredAttributesMixin:
             raise exceptions.MissingAttributes(missing_attrs)
 
 
-def to_unicode(bytestring):
+def to_unicode(bytestring, *encodings):
     """Try to convert a string of bytes into a unicode string."""
     # If we already have a unicode string, just return it.
     if isinstance(bytestring, str):
         return bytestring
 
-    try:
-        return bytestring.decode()
-    except UnicodeDecodeError:
-        pass
+    # If no encodings were passed through, give utf8 a go.
+    if not encodings:
+        encodings = ('utf8',)
 
-    charset = cchardet.detect(bytestring)['encoding'] or 'utf-8'
-    return bytestring.decode(encoding=charset, errors='surrogateescape')
+    # Try each of the encodings until no error is thrown.
+    for encoding in encodings:
+        try:
+            return bytestring.decode(encoding)
+        except UnicodeDecodeError:
+            continue
+
+    # Try to guess the encoding. If that doesn't work use utf8.
+    encoding = cchardet.detect(bytestring)['encoding'] or 'utf8'
+
+    # As everything else failed, be more lenient with errors.
+    return bytestring.decode(encoding, errors='surrogateescape')
 
 
 def to_bytes(string):

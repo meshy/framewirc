@@ -45,15 +45,11 @@ class RequiredAttributesMixin:
             raise exceptions.MissingAttributes(missing_attrs)
 
 
-def to_unicode(bytestring, *encodings):
+def to_unicode(bytestring, encodings=('utf8',)):
     """Try to convert a string of bytes into a unicode string."""
     # If we already have a unicode string, just return it.
     if isinstance(bytestring, str):
         return bytestring
-
-    # If no encodings were passed through, give utf8 a go.
-    if not encodings:
-        encodings = ('utf8',)
 
     # Try each of the encodings until no error is thrown.
     for encoding in encodings:

@@ -27,7 +27,7 @@ once the API is stable.
 
 - ADDED: `utils.to_unicode` now takes encoding suggestions.
 
-  Preferred character encodings can now be passed into `to_unicode` in order.
+  An iterable of Preferred character encodings can now be passed in.
 
 ## v0.0.1
 

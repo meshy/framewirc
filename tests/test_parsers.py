@@ -74,11 +74,12 @@ class TestNick(TestCase):
 
 
 class TestPrivmsg(TestCase):
-    sender = b'sender!ident@hostname'
-
-    def processed_message(self, target=b'#target', sender=b'nick!ident@host'):
+    def processed_message(
+            self,
+            target=b'#target',
+            sender=b'nick!ident@host',
+            body='message body'):
         """Build a PRIVMSG, and process it with parsers.privmsg."""
-        body = 'message body'
         message = build_message('PRIVMSG', target, prefix=sender, suffix=body)
         return privmsg(ReceivedMessage(message))
 
@@ -121,6 +122,24 @@ class TestPrivmsg(TestCase):
         result = self.processed_message(target=target, sender=sender)
 
         self.assertEqual(result['channel'], sender_nick)
+
+    def test_not_third_person(self):
+        """Normal messages should not be marked as `third_person`."""
+        result = self.processed_message()
+
+        self.assertFalse(result['third_person'])
+
+    def test_third_person(self):
+        """
+        Set `third_person` when the message is sent as a "CTCP ACTION".
+
+        This is generally the result of a user typing a "/me" command into
+        their client.
+        """
+        result = self.processed_message(body='\1ACTION is third person!\1')
+
+        self.assertEqual(result['raw_body'], b'is third person!')
+        self.assertTrue(result['third_person'])
 
 
 class TestToKwargs(TestCase):

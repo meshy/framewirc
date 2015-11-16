@@ -64,12 +64,19 @@ def privmsg(message):
     else:
         channel = sender_nick
 
+    raw_body = message.suffix
+    third_person = False
+    if raw_body.startswith(b'\1ACTION ') and raw_body.endswith(b'\1'):  # /me
+        third_person = True
+        raw_body = raw_body.lstrip(b'\1ACTION ').rstrip(b'\1')
+
     return {
         'channel': channel,
-        'raw_body': message.suffix,
+        'raw_body': raw_body,
         'raw_sender': raw_sender,
         'sender_nick': sender_nick,
         'target': target,
+        'third_person': third_person,
     }
 
 

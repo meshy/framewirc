@@ -15,6 +15,11 @@ once the API is stable.
 
   A function to determine of a string is a valid channel name.
 
+- ADDED: `parsers.message_to_kwargs`
+
+  A handler decorator that takes a parser, and passes the resulting dictionary
+  to the handler as kwargs.
+
 - ADDED: `parsers.nick`.
 
   A function that takes a `nick!ident@host` string (or similar), and returns a
@@ -24,11 +29,6 @@ once the API is stable.
 
   A function that splits a `PRIVMSG` command into a dictionary of semantically
   named attributes.
-
-- ADDED: `parsers.to_kwargs`
-
-  A handler decorator that takes a parser, and passes the resulting dictionary
-  to the handler as kwargs.
 
 - ADDED: `utils.to_unicode` now takes encoding suggestions.
 

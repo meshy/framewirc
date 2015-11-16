@@ -80,6 +80,24 @@ def privmsg(message):
     }
 
 
+def kwargs_to_kwargs(parser):
+    """
+    Decorator that passes the result of a kwargs parser to a handler as kwargs.
+
+    The parser needs to accept any number of kwargs.
+
+    Keys returned by the parser will overwrite those that the handler would
+    otherwise have received.
+    """
+    def inner_decorator(handler):
+        def wrapped(**kwargs):
+            parser_result = parser(**kwargs)
+            kwargs.update(parser_result)
+            handler(**kwargs)
+        return wrapped
+    return inner_decorator
+
+
 def message_to_kwargs(parser):
     """
     Decorator that passes the result of a message parser to a handler as kwargs.

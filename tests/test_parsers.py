@@ -162,3 +162,15 @@ class TestToKwargs(TestCase):
             message=self.message,
             derived_value='derived',
         )
+
+    def test_parser_called_with_kwarg(self):
+        """
+        The parser is called with `message=message`.
+
+        It's not really a big deal, but it's slightly more flexible if the
+        parser is called with kwargs.
+        """
+        parser = mock.Mock(return_value={})
+        wrapped = message_to_kwargs(parser)(self.handler)
+        wrapped(client=self.client, message=self.message)
+        parser.assert_called_once_with(message=self.message)

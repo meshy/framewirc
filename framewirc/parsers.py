@@ -71,3 +71,13 @@ def privmsg(message):
         'sender_nick': sender_nick,
         'target': target,
     }
+
+
+def to_kwargs(parser):
+    """Decorator that passes the result of a parser to a handler as kwargs."""
+    def inner_decorator(handler):
+        def wrapped(client, message):
+            parser_result = parser(message)
+            handler(client=client, message=message, **parser_result)
+        return wrapped
+    return inner_decorator

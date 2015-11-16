@@ -1,7 +1,7 @@
-from unittest import TestCase
+from unittest import mock, TestCase
 
 from framewirc.message import build_message, ReceivedMessage
-from framewirc.parsers import is_channel, nick, privmsg
+from framewirc.parsers import is_channel, nick, privmsg, to_kwargs
 
 
 class TestIsChannel(TestCase):
@@ -121,3 +121,25 @@ class TestPrivmsg(TestCase):
         result = self.processed_message(target=target, sender=sender)
 
         self.assertEqual(result['channel'], sender_nick)
+
+
+class TestToKwargs(TestCase):
+    def setUp(self):
+        self.client = object()
+        self.handler = mock.Mock()
+        self.message = object()
+
+    def test_result_passed(self):
+        """Dictionary returned from parser passed as kwargs."""
+        def returns_dict(message):
+            return {'derived_value': 'derived'}
+
+        wrapped = to_kwargs(returns_dict)(self.handler)
+
+        wrapped(client=self.client, message=self.message)
+
+        self.handler.assert_called_once_with(
+            client=self.client,
+            message=self.message,
+            derived_value='derived',
+        )

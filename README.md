@@ -43,9 +43,9 @@ quips = {
 def snarky_response(client, channel, raw_body, **kwargs):
     body = to_unicode(raw_body)
 
-    for trigger, reposte in quips.items():
+    for trigger, riposte in quips.items():
         if trigger in body:
-            client.privmsg(channel, reposte)
+            client.privmsg(channel, riposte)
 
 
 class SnarkyClient(Client):

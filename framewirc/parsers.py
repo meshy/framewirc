@@ -80,7 +80,7 @@ def privmsg(message):
     }
 
 
-def kwargs_to_kwargs(parser):
+def apply_kwargs_parser(parser):
     """
     Decorator that passes the result of a kwargs parser to a handler as kwargs.
 
@@ -98,7 +98,7 @@ def kwargs_to_kwargs(parser):
     return inner_decorator
 
 
-def message_to_kwargs(parser):
+def apply_message_parser(parser):
     """
     Decorator that passes the result of a message parser to a handler as kwargs.
 

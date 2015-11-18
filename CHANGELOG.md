@@ -11,19 +11,19 @@ once the API is stable.
   encoding. This is now left to the programmer to decide, allowing them to do
   things such as change default encoding per channel.
 
-- ADDED: `parsers.is_channel`.
-
-  A function to determine of a string is a valid channel name.
-
-- ADDED: `parsers.kwargs_to_kwargs`
+- ADDED: `parsers.apply_kwargs_parser`
 
   A handler decorator that takes a parser, and passes the resulting dictionary
   to the handler as kwargs. The parser should accept all kwargs.
 
-- ADDED: `parsers.message_to_kwargs`
+- ADDED: `parsers.apply_message_parser`
 
   A handler decorator that takes a parser, and passes the resulting dictionary
   to the handler as kwargs. The parser should accept only a `message` kwarg.
+
+- ADDED: `parsers.is_channel`.
+
+  A function to determine of a string is a valid channel name.
 
 - ADDED: `parsers.nick`.
 

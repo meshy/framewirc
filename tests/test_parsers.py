@@ -2,9 +2,9 @@ from unittest import mock, TestCase
 
 from framewirc.message import build_message, ReceivedMessage
 from framewirc.parsers import (
+    apply_kwargs_parser,
+    apply_message_parser,
     is_channel,
-    kwargs_to_kwargs,
-    message_to_kwargs,
     nick,
     privmsg,
 )
@@ -152,7 +152,7 @@ def parser_taking_message(message):
     return {'key': 'value'}
 
 
-class TestMessageToKwargs(TestCase):
+class TestApplyMessageParser(TestCase):
     def setUp(self):
         self.client = object()
         self.handler = mock.Mock()
@@ -160,7 +160,7 @@ class TestMessageToKwargs(TestCase):
 
     def test_result_passed(self):
         """Dictionary returned from parser passed as kwargs."""
-        wrapped = message_to_kwargs(parser_taking_message)(self.handler)
+        wrapped = apply_message_parser(parser_taking_message)(self.handler)
 
         wrapped(client=self.client, message=self.message)
 
@@ -178,7 +178,7 @@ class TestMessageToKwargs(TestCase):
         parser is called with kwargs.
         """
         parser = mock.Mock(return_value={})
-        wrapped = message_to_kwargs(parser)(self.handler)
+        wrapped = apply_message_parser(parser)(self.handler)
         wrapped(client=self.client, message=self.message)
         parser.assert_called_once_with(message=self.message)
 
@@ -187,7 +187,7 @@ def parser_taking_kwargs(client, message, **kwargs):
     return {'key': 'value'}
 
 
-class TestKwargsToKwargs(TestCase):
+class TestApplyKwargsParser(TestCase):
     def setUp(self):
         self.client = object()
         self.handler = mock.Mock()
@@ -195,7 +195,7 @@ class TestKwargsToKwargs(TestCase):
 
     def test_result_passed(self):
         """Dictionary returned from parser passed as kwargs."""
-        wrapped = kwargs_to_kwargs(parser_taking_kwargs)(self.handler)
+        wrapped = apply_kwargs_parser(parser_taking_kwargs)(self.handler)
 
         wrapped(client=self.client, message=self.message)
 

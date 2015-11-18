@@ -39,7 +39,7 @@ quips = {
 
 
 @filters.command_whitelist(PRIVMSG)
-@parsers.to_kwargs(parsers.privmsg)
+@parsers.apply_kwargs_parser(parsers.privmsg)
 def snarky_response(client, channel, raw_body, **kwargs):
     body = to_unicode(raw_body)
 

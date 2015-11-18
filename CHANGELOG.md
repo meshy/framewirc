@@ -11,6 +11,16 @@ once the API is stable.
   encoding. This is now left to the programmer to decide, allowing them to do
   things such as change default encoding per channel.
 
+- ADDED: `parsers.apply_kwargs_parser`
+
+  A handler decorator that takes a parser, and passes the resulting dictionary
+  to the handler as kwargs. The parser should accept all kwargs.
+
+- ADDED: `parsers.apply_message_parser`
+
+  A handler decorator that takes a parser, and passes the resulting dictionary
+  to the handler as kwargs. The parser should accept only a `message` kwarg.
+
 - ADDED: `parsers.is_channel`.
 
   A function to determine of a string is a valid channel name.
@@ -24,11 +34,6 @@ once the API is stable.
 
   A function that splits a `PRIVMSG` command into a dictionary of semantically
   named attributes.
-
-- ADDED: `parsers.to_kwargs`
-
-  A handler decorator that takes a parser, and passes the resulting dictionary
-  to the handler as kwargs.
 
 - ADDED: `utils.to_unicode` now takes encoding suggestions.
 

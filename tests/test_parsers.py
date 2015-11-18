@@ -1,7 +1,13 @@
 from unittest import mock, TestCase
 
 from framewirc.message import build_message, ReceivedMessage
-from framewirc.parsers import is_channel, nick, privmsg, to_kwargs
+from framewirc.parsers import (
+    apply_kwargs_parser,
+    apply_message_parser,
+    is_channel,
+    nick,
+    privmsg,
+)
 
 
 class TestIsChannel(TestCase):
@@ -142,7 +148,11 @@ class TestPrivmsg(TestCase):
         self.assertTrue(result['third_person'])
 
 
-class TestToKwargs(TestCase):
+def parser_taking_message(message):
+    return {'key': 'value'}
+
+
+class TestApplyMessageParser(TestCase):
     def setUp(self):
         self.client = object()
         self.handler = mock.Mock()
@@ -150,15 +160,47 @@ class TestToKwargs(TestCase):
 
     def test_result_passed(self):
         """Dictionary returned from parser passed as kwargs."""
-        def returns_dict(message):
-            return {'derived_value': 'derived'}
-
-        wrapped = to_kwargs(returns_dict)(self.handler)
+        wrapped = apply_message_parser(parser_taking_message)(self.handler)
 
         wrapped(client=self.client, message=self.message)
 
         self.handler.assert_called_once_with(
             client=self.client,
             message=self.message,
-            derived_value='derived',
+            key='value',
+        )
+
+    def test_parser_called_with_kwarg(self):
+        """
+        The parser is called with `message=message`.
+
+        It's not really a big deal, but it's slightly more flexible if the
+        parser is called with kwargs.
+        """
+        parser = mock.Mock(return_value={})
+        wrapped = apply_message_parser(parser)(self.handler)
+        wrapped(client=self.client, message=self.message)
+        parser.assert_called_once_with(message=self.message)
+
+
+def parser_taking_kwargs(client, message, **kwargs):
+    return {'key': 'value'}
+
+
+class TestApplyKwargsParser(TestCase):
+    def setUp(self):
+        self.client = object()
+        self.handler = mock.Mock()
+        self.message = object()
+
+    def test_result_passed(self):
+        """Dictionary returned from parser passed as kwargs."""
+        wrapped = apply_kwargs_parser(parser_taking_kwargs)(self.handler)
+
+        wrapped(client=self.client, message=self.message)
+
+        self.handler.assert_called_once_with(
+            client=self.client,
+            message=self.message,
+            key='value',
         )

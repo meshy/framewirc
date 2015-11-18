@@ -80,11 +80,33 @@ def privmsg(message):
     }
 
 
-def to_kwargs(parser):
-    """Decorator that passes the result of a parser to a handler as kwargs."""
+def apply_kwargs_parser(parser):
+    """
+    Decorator that passes the result of a kwargs parser to a handler as kwargs.
+
+    The parser needs to accept any number of kwargs.
+
+    Keys returned by the parser will overwrite those that the handler would
+    otherwise have received.
+    """
+    def inner_decorator(handler):
+        def wrapped(**kwargs):
+            parser_result = parser(**kwargs)
+            kwargs.update(parser_result)
+            handler(**kwargs)
+        return wrapped
+    return inner_decorator
+
+
+def apply_message_parser(parser):
+    """
+    Decorator that passes the result of a message parser to a handler as kwargs.
+
+    The parser will only be passed a `message` kwarg.
+    """
     def inner_decorator(handler):
         def wrapped(client, message):
-            parser_result = parser(message)
+            parser_result = parser(message=message)
             handler(client=client, message=message, **parser_result)
         return wrapped
     return inner_decorator

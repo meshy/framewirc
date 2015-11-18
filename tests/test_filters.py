@@ -4,7 +4,7 @@ from framewirc import filters
 from framewirc.message import ReceivedMessage
 
 
-class TestCommandBlacklist(TestCase):
+class TestDeny(TestCase):
     def setUp(self):
         self.client = object()
         self.handler = mock.Mock()
@@ -12,7 +12,7 @@ class TestCommandBlacklist(TestCase):
     def test_correct_list(self):
         """Un-blacklisted commands should be allowed."""
         message = ReceivedMessage(b'COMMAND\r\n')
-        wrapped = filters.command_blacklist(['WRONG_COMMAND'])(self.handler)
+        wrapped = filters.deny(['WRONG_COMMAND'])(self.handler)
 
         wrapped(self.client, message)
 
@@ -24,7 +24,7 @@ class TestCommandBlacklist(TestCase):
     def test_incorrect_list(self):
         """Blacklisted commands should not be allowed."""
         message = ReceivedMessage(b'WRONG_COMMAND\r\n')
-        wrapped = filters.command_blacklist(['WRONG_COMMAND'])(self.handler)
+        wrapped = filters.deny(['WRONG_COMMAND'])(self.handler)
 
         wrapped(self.client, message)
 
@@ -33,7 +33,7 @@ class TestCommandBlacklist(TestCase):
     def test_correct_item(self):
         """Un-blacklisted commands should be allowed (string blacklist)."""
         message = ReceivedMessage(b'COMMAND\r\n')
-        wrapped = filters.command_blacklist('WRONG_COMMAND')(self.handler)
+        wrapped = filters.deny('WRONG_COMMAND')(self.handler)
 
         wrapped(self.client, message)
 
@@ -45,14 +45,14 @@ class TestCommandBlacklist(TestCase):
     def test_incorrect_item(self):
         """Blacklisted commands should not be allowed (string blacklist)."""
         message = ReceivedMessage(b'WRONG_COMMAND\r\n')
-        wrapped = filters.command_blacklist('WRONG_COMMAND')(self.handler)
+        wrapped = filters.deny('WRONG_COMMAND')(self.handler)
 
         wrapped(self.client, message)
 
         self.assertFalse(self.handler.called)
 
 
-class TestCommandWhitelist(TestCase):
+class TestAllow(TestCase):
     def setUp(self):
         self.client = object()
         self.handler = mock.Mock()
@@ -60,7 +60,7 @@ class TestCommandWhitelist(TestCase):
     def test_correct_list(self):
         """Whitelisted commands should be allowed."""
         message = ReceivedMessage(b'COMMAND\r\n')
-        wrapped = filters.command_whitelist(['COMMAND'])(self.handler)
+        wrapped = filters.allow(['COMMAND'])(self.handler)
 
         wrapped(self.client, message)
 
@@ -72,7 +72,7 @@ class TestCommandWhitelist(TestCase):
     def test_incorrect_list(self):
         """Unlisted commands should not be allowed."""
         message = ReceivedMessage(b'WRONG_COMMAND\r\n')
-        wrapped = filters.command_whitelist(['COMMAND'])(self.handler)
+        wrapped = filters.allow(['COMMAND'])(self.handler)
 
         wrapped(self.client, message)
 
@@ -81,7 +81,7 @@ class TestCommandWhitelist(TestCase):
     def test_correct_item(self):
         """Whitelisted commands should be allowed (string whitelist)."""
         message = ReceivedMessage(b'COMMAND\r\n')
-        wrapped = filters.command_whitelist('COMMAND')(self.handler)
+        wrapped = filters.allow('COMMAND')(self.handler)
 
         wrapped(self.client, message)
 
@@ -93,7 +93,7 @@ class TestCommandWhitelist(TestCase):
     def test_incorrect_item(self):
         """Unlisted commands should not be allowed (string whitelist)."""
         message = ReceivedMessage(b'WRONG_COMMAND\r\n')
-        wrapped = filters.command_whitelist('COMMAND')(self.handler)
+        wrapped = filters.allow('COMMAND')(self.handler)
 
         wrapped(self.client, message)
 
@@ -102,7 +102,7 @@ class TestCommandWhitelist(TestCase):
     def test_incorrect_subitem(self):
         """Partial commands should not be allowed (string whitelist)."""
         message = ReceivedMessage(b'COMMA\r\n')
-        wrapped = filters.command_whitelist('COMMAND')(self.handler)
+        wrapped = filters.allow('COMMAND')(self.handler)
 
         wrapped(self.client, message)
 

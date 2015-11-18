@@ -25,11 +25,11 @@ documentation.)
 ```python
 import asyncio
 
-from framewirc import filters
+from framewirc import filters, parsers
 from framewirc.client import Client
 from framewirc.commands import PRIVMSG
 from framewirc.handlers import basic_handlers
-from framewirc.parsers import nick
+from framewirc.utils import to_unicode
 
 
 quips = {
@@ -39,14 +39,13 @@ quips = {
 
 
 @filters.allow(PRIVMSG)
-def snarky_response(client, message):
-    # See section "Still to come" for ideas on how this could be simplified.
-    sender = nick(message.prefix)['nick']
-    text = to_unicode(message.suffix)
+@parsers.apply_kwargs_parser(parsers.privmsg)
+def snarky_response(client, channel, raw_body, **kwargs):
+    body = to_unicode(raw_body)
 
-    for trigger, reposte in quips.items():
-        if trigger in text:
-            client.privmsg(sender, reposte)
+    for trigger, riposte in quips.items():
+        if trigger in body:
+            client.privmsg(channel, riposte)
 
 
 class SnarkyClient(Client):
@@ -79,7 +78,8 @@ messages in both directions must adhere to the (simple) rules:
 
   There is no default encoding, so sometimes one just has to guess! To guess
   how to turn these streams of bytes into Python strings, we have elected to
-  use [`cChardet`][cchardet-home] for this in `utils.to_unicode`.
+  use [`cChardet`][cchardet-home] in `utils.to_unicode` when utf8 fails. If you
+  know the encoding, you can override this behaviour.
 
 - Messages have a relatively simple structure.
 
@@ -161,14 +161,10 @@ this by hand, so use the `utils.build_message` method to help you.
 
 Features that I am hoping to implement in future:
 
-- More layers of abstraction from the IRC protocol.
+- More message parsers
 
-  In particular, I would like to call handlers with more intelligent kwargs
-  when dealing with known types of events. This might mean that a handler of
-  `PRIVMSG`s is sent `client, sender, recipient, text` rather than just
-  `client, message`. That `sender` might also need some special treatment as
-  the names of other users are often sent as `username!ident@host.example.com`
-  but need to be replied to as simply `username`.
+  At the moment, we only have a special parser for `PRIVMSG` messages, but
+  there is room for loads more.
 
 - Handle more text encodings.
 

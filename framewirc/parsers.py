@@ -64,10 +64,49 @@ def privmsg(message):
     else:
         channel = sender_nick
 
+    raw_body = message.suffix
+    third_person = False
+    if raw_body.startswith(b'\1ACTION ') and raw_body.endswith(b'\1'):  # /me
+        third_person = True
+        raw_body = raw_body.lstrip(b'\1ACTION ').rstrip(b'\1')
+
     return {
         'channel': channel,
-        'raw_body': message.suffix,
+        'raw_body': raw_body,
         'raw_sender': raw_sender,
         'sender_nick': sender_nick,
         'target': target,
+        'third_person': third_person,
     }
+
+
+def apply_kwargs_parser(parser):
+    """
+    Decorator that passes the result of a kwargs parser to a handler as kwargs.
+
+    The parser needs to accept any number of kwargs.
+
+    Keys returned by the parser will overwrite those that the handler would
+    otherwise have received.
+    """
+    def inner_decorator(handler):
+        def wrapped(**kwargs):
+            parser_result = parser(**kwargs)
+            kwargs.update(parser_result)
+            handler(**kwargs)
+        return wrapped
+    return inner_decorator
+
+
+def apply_message_parser(parser):
+    """
+    Decorator that passes the result of a message parser to a handler as kwargs.
+
+    The parser will only be passed a `message` kwarg.
+    """
+    def inner_decorator(handler):
+        def wrapped(client, message):
+            parser_result = parser(message=message)
+            handler(client=client, message=message, **parser_result)
+        return wrapped
+    return inner_decorator

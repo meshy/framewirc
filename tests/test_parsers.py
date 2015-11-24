@@ -1,4 +1,4 @@
-from unittest import mock, TestCase
+from unittest import mock
 
 from framewirc.message import build_message, ReceivedMessage
 from framewirc.parsers import (
@@ -56,7 +56,7 @@ class TestIsChannel:
         assert is_channel('#contains\7BEL') is False
 
 
-class TestNick(TestCase):
+class TestNick:
     """The nick parser can deal with several nick formats."""
     def test_nick_with_ident(self):
         result = nick('nickname!ident@hostname')
@@ -66,7 +66,7 @@ class TestNick(TestCase):
             'ident': 'ident',
             'host': 'hostname',
         }
-        self.assertEqual(result, expected)
+        assert result == expected
 
     def test_nick_without_ident(self):
         result = nick('~nickname@hostname')
@@ -76,10 +76,10 @@ class TestNick(TestCase):
             'ident': None,
             'host': 'hostname',
         }
-        self.assertEqual(result, expected)
+        assert result == expected
 
 
-class TestPrivmsg(TestCase):
+class TestPrivmsg:
     def processed_message(
             self,
             target=b'#target',
@@ -93,32 +93,32 @@ class TestPrivmsg(TestCase):
         """The message suffix is the 'raw_body'."""
         result = self.processed_message()
 
-        self.assertEqual(result['raw_body'], b'message body')
+        assert result['raw_body'] == b'message body'
 
     def test_raw_sender(self):
         """The 'raw_sender' key is populated by the message prefix."""
         result = self.processed_message()
 
-        self.assertEqual(result['raw_sender'], 'nick!ident@host')
+        assert result['raw_sender'] == 'nick!ident@host'
 
     def test_sender_nick(self):
         """The `sender_nick` key is the sender's nick."""
         result = self.processed_message()
 
-        self.assertEqual(result['sender_nick'], 'nick')
+        assert result['sender_nick'] == 'nick'
 
     def test_target(self):
         """The 'target' key is populated by the message params."""
         result = self.processed_message()
 
-        self.assertEqual(result['target'], '#target')
+        assert result['target'] == '#target'
 
     def test_channel_when_channel(self):
         """When sent to a channel, the 'channel' should reflect that."""
         target = '#channel'
         result = self.processed_message(target=target)
 
-        self.assertEqual(result['channel'], target)
+        assert result['channel'] == target
 
     def test_channel_when_direct(self):
         """When sent directly to a user, the 'channel' is the sender."""
@@ -127,13 +127,13 @@ class TestPrivmsg(TestCase):
         sender = sender_nick + '!ident@hostname'
         result = self.processed_message(target=target, sender=sender)
 
-        self.assertEqual(result['channel'], sender_nick)
+        assert result['channel'] == sender_nick
 
     def test_not_third_person(self):
         """Normal messages should not be marked as `third_person`."""
         result = self.processed_message()
 
-        self.assertFalse(result['third_person'])
+        assert result['third_person'] is False
 
     def test_third_person(self):
         """
@@ -144,16 +144,16 @@ class TestPrivmsg(TestCase):
         """
         result = self.processed_message(body='\1ACTION is third person!\1')
 
-        self.assertEqual(result['raw_body'], b'is third person!')
-        self.assertTrue(result['third_person'])
+        assert result['raw_body'] == b'is third person!'
+        assert result['third_person'] is True
 
 
 def parser_taking_message(message):
     return {'key': 'value'}
 
 
-class TestApplyMessageParser(TestCase):
-    def setUp(self):
+class TestApplyMessageParser:
+    def setup_method(self, method):
         self.client = object()
         self.handler = mock.Mock()
         self.message = object()
@@ -187,8 +187,8 @@ def parser_taking_kwargs(client, message, **kwargs):
     return {'key': 'value'}
 
 
-class TestApplyKwargsParser(TestCase):
-    def setUp(self):
+class TestApplyKwargsParser:
+    def setup_method(self, method):
         self.client = object()
         self.handler = mock.Mock()
         self.message = object()

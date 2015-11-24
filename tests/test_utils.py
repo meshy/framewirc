@@ -10,24 +10,16 @@ class TestToUnicode:
         assert to_unicode(text) == text
 
     def test_ascii(self):
-        text = b'This is just plain ASCII'
-        expected = 'This is just plain ASCII'
-        assert to_unicode(text) == expected
+        assert to_unicode(b'Just plain ASCII') == 'Just plain ASCII'
 
     def test_latin_1(self):
-        text = b'Ume\xe5'
-        expected = 'Umeå'
-        assert to_unicode(text) == expected
+        assert to_unicode(b'Ume\xe5') == 'Umeå'
 
     def test_utf8(self):
-        text = b"Rhoi'r ffidil yn y t\xc3\xb4"
-        expected = "Rhoi'r ffidil yn y tô"
-        assert to_unicode(text) == expected
+        assert to_unicode(b'Hyl\xc3\xb4') == 'Hylô'
 
     def test_windows_1250(self):
-        text = b'Miko\xb3aj Kopernik'
-        expected = 'Mikołaj Kopernik'
-        assert to_unicode(text) == expected
+        assert to_unicode(b'Miko\xb3aj Kopernik') == 'Mikołaj Kopernik'
 
     def test_not_bytes_or_string(self):
         with pytest.raises(AttributeError):
@@ -39,9 +31,8 @@ class TestToUnicode:
 
         This is because some non-UTF8 strings can be "valid" utf8.
         """
-        text = b'\x1b$BEl5~ET\x1b(B'
-        expected = '東京都'  # as opposed to '\x1b$BEl5~ET\x1b(B'
-        assert to_unicode(text, ['iso-2022-jp']) == expected
+        # UTF8 would make this '\x1b$BEl5~ET\x1b(B'
+        assert to_unicode(b'\x1b$BEl5~ET\x1b(B', ['iso-2022-jp']) == '東京都'
 
     def test_expected_decoding_quietly_wrong(self):
         """
@@ -49,16 +40,14 @@ class TestToUnicode:
 
         Perhaps not ideal, but I don't know if it's possible to catch this.
         """
-        text = b'Ume\xe5'
-        expected = 'Umeĺ'  # Decoding incorrectly throws no error in this case
-        assert to_unicode(text, ['windows_1250']) == expected
+        # Decoding incorrectly throws no error in this case
+        assert to_unicode(b'Ume\xe5', ['windows_1250']) == 'Umeĺ'
 
     def test_expected_decoding_loudly_wrong(self):
         """An expected decoding can fall back to another encoding."""
         text = b'\xff\xfe\xb5\x03\xbb\x03\xbb\x03\xb7\x03\xbd\x03\xb9\x03\xba\x03\xac\x03'
-        expected = 'ελληνικά'
-        # `text` is utf16
-        assert to_unicode(text, ['iso-2022-jp', 'utf16']) == expected
+        # `text` is encoded in utf16
+        assert to_unicode(text, ['iso-2022-jp', 'utf16']) == 'ελληνικά'
 
 
 class TestToBytes:

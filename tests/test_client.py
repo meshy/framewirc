@@ -56,8 +56,7 @@ class TestOnConnect:
 
     def test_set_nick_called(self):
         self.client.on_connect()
-        expected = b'NICK anick\r\n'
-        self.client.connection.send.assert_called_with(expected)
+        self.client.connection.send.assert_called_with(b'NICK anick\r\n')
 
 
 class TestPrivmsg:
@@ -87,8 +86,7 @@ class TestRequiredFields:
 
     def test_fields(self):
         """Are the correct fields being checked?"""
-        required = ('handlers', 'real_name', 'nick')
-        assert Client.required_attributes == required
+        assert Client.required_attributes == ('handlers', 'real_name', 'nick')
 
     def test_uses_required_attributes_mixin(self):
         """Is RequiredAttributesMixin.__init__ actually getting called?"""
@@ -108,8 +106,7 @@ class TestSetNick:
 
     def test_command_sent(self):
         """Should send a message to the network."""
-        new_nick = 'meshy'
-        self.client.set_nick(new_nick)
+        self.client.set_nick('meshy')
         self.client.connection.send.assert_called_with(b'NICK meshy\r\n')
 
     def test_new_nick_kept(self):

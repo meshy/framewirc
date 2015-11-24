@@ -59,24 +59,20 @@ class TestIsChannel:
 class TestNick:
     """The nick parser can deal with several nick formats."""
     def test_nick_with_ident(self):
-        result = nick('nickname!ident@hostname')
-
         expected = {
             'nick': 'nickname',
             'ident': 'ident',
             'host': 'hostname',
         }
-        assert result == expected
+        assert nick('nickname!ident@hostname') == expected
 
     def test_nick_without_ident(self):
-        result = nick('~nickname@hostname')
-
         expected = {
             'nick': 'nickname',
             'ident': None,
             'host': 'hostname',
         }
-        assert result == expected
+        assert nick('~nickname@hostname') == expected
 
 
 class TestPrivmsg:

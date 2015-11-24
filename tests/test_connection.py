@@ -20,8 +20,7 @@ class TestRequiredFields:
     """Test to show that RequiredAttribuesMixin is properly configured."""
     def test_fields(self):
         """Are the correct fields being checked?"""
-        required = ('client', 'host')
-        assert Connection.required_attributes == required
+        assert Connection.required_attributes == ('client', 'host')
 
     def test_uses_required_attributes_mixin(self):
         """Is RequiredAttributesMixin.__init__ actually getting called?"""

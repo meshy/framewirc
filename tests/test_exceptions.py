@@ -1,13 +1,11 @@
-from unittest import TestCase
-
 from framewirc import exceptions
 
 
-class MissingAttributesTest(TestCase):
+class MissingAttributesTest:
     def test_message(self):
         attrs = ['some', 'attrs']
         expected = 'Required attribute(s) missing: {}'.format(attrs)
 
         exception = exceptions.MissingAttributes(attrs)
 
-        self.assertEqual(str(exception), expected)
+        assert str(exception) == expected

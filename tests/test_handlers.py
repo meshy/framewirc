@@ -1,10 +1,10 @@
-from unittest import mock, TestCase
+from unittest import mock
 
 from framewirc import handlers
 from framewirc.message import ReceivedMessage
 
 
-class TestPing(TestCase):
+class TestPing:
     def test_ping(self):
         """Respond to PING with PONG."""
         client = mock.MagicMock()
@@ -21,10 +21,10 @@ class TestPing(TestCase):
 
         handlers.ping(client, message)
 
-        self.assertFalse(client.connection.send.called)
+        assert client.connection.send.called is False
 
 
-class TestBadNick(TestCase):
+class TestBadNick:
     def test_nicknameinuse(self):
         """Should call client.set_nick when there's a name clash."""
         client = mock.MagicMock(nick='taken')
@@ -41,4 +41,4 @@ class TestBadNick(TestCase):
 
         handlers.nickname_in_use(client, message)
 
-        self.assertFalse(client.set_nick.called)
+        assert client.set_nick.called is False

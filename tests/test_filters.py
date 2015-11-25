@@ -1,11 +1,11 @@
-from unittest import mock, TestCase
+from unittest import mock
 
 from framewirc import filters
 from framewirc.message import ReceivedMessage
 
 
-class TestDeny(TestCase):
-    def setUp(self):
+class TestDeny:
+    def setup_method(self, method):
         self.client = object()
         self.handler = mock.Mock()
 
@@ -28,7 +28,7 @@ class TestDeny(TestCase):
 
         wrapped(self.client, message)
 
-        self.assertFalse(self.handler.called)
+        assert self.handler.called is False
 
     def test_correct_item(self):
         """Un-blacklisted commands should be allowed (string blacklist)."""
@@ -49,11 +49,11 @@ class TestDeny(TestCase):
 
         wrapped(self.client, message)
 
-        self.assertFalse(self.handler.called)
+        assert self.handler.called is False
 
 
-class TestAllow(TestCase):
-    def setUp(self):
+class TestAllow:
+    def setup_method(self, method):
         self.client = object()
         self.handler = mock.Mock()
 
@@ -76,7 +76,7 @@ class TestAllow(TestCase):
 
         wrapped(self.client, message)
 
-        self.assertFalse(self.handler.called)
+        assert self.handler.called is False
 
     def test_correct_item(self):
         """Whitelisted commands should be allowed (string whitelist)."""
@@ -97,7 +97,7 @@ class TestAllow(TestCase):
 
         wrapped(self.client, message)
 
-        self.assertFalse(self.handler.called)
+        assert self.handler.called is False
 
     def test_incorrect_subitem(self):
         """Partial commands should not be allowed (string whitelist)."""
@@ -106,4 +106,4 @@ class TestAllow(TestCase):
 
         wrapped(self.client, message)
 
-        self.assertFalse(self.handler.called)
+        assert self.handler.called is False

@@ -1,41 +1,28 @@
-from unittest import TestCase
+import pytest
 
 from framewirc import exceptions
 from framewirc.utils import chunk_message, RequiredAttributesMixin, to_bytes, to_unicode
 
 
-class TestToUnicode(TestCase):
+class TestToUnicode:
     def test_already_unicode(self):
         text = 'тнιѕ ιѕ αℓяєα∂у υηι¢σ∂є'
-        result = to_unicode(text)
-        self.assertEqual(result, text)
+        assert to_unicode(text) == text
 
     def test_ascii(self):
-        text = b'This is just plain ASCII'
-        expected = 'This is just plain ASCII'
-        result = to_unicode(text)
-        self.assertEqual(result, expected)
+        assert to_unicode(b'Just plain ASCII') == 'Just plain ASCII'
 
     def test_latin_1(self):
-        text = b'Ume\xe5'
-        expected = 'Umeå'
-        result = to_unicode(text)
-        self.assertEqual(result, expected)
+        assert to_unicode(b'Ume\xe5') == 'Umeå'
 
     def test_utf8(self):
-        text = b"Rhoi'r ffidil yn y t\xc3\xb4"
-        expected = "Rhoi'r ffidil yn y tô"
-        result = to_unicode(text)
-        self.assertEqual(result, expected)
+        assert to_unicode(b'Hyl\xc3\xb4') == 'Hylô'
 
     def test_windows_1250(self):
-        text = b'Miko\xb3aj Kopernik'
-        expected = 'Mikołaj Kopernik'
-        result = to_unicode(text)
-        self.assertEqual(result, expected)
+        assert to_unicode(b'Miko\xb3aj Kopernik') == 'Mikołaj Kopernik'
 
     def test_not_bytes_or_string(self):
-        with self.assertRaises(AttributeError):
+        with pytest.raises(AttributeError):
             to_unicode(None)
 
     def test_expected_decoding_first(self):
@@ -44,10 +31,8 @@ class TestToUnicode(TestCase):
 
         This is because some non-UTF8 strings can be "valid" utf8.
         """
-        text = b'\x1b$BEl5~ET\x1b(B'
-        expected = '東京都'  # as opposed to '\x1b$BEl5~ET\x1b(B'
-        result = to_unicode(text, ['iso-2022-jp'])
-        self.assertEqual(result, expected)
+        # UTF8 would make this '\x1b$BEl5~ET\x1b(B'
+        assert to_unicode(b'\x1b$BEl5~ET\x1b(B', ['iso-2022-jp']) == '東京都'
 
     def test_expected_decoding_quietly_wrong(self):
         """
@@ -55,43 +40,35 @@ class TestToUnicode(TestCase):
 
         Perhaps not ideal, but I don't know if it's possible to catch this.
         """
-        text = b'Ume\xe5'
-        expected = 'Umeĺ'  # Decoding incorrectly throws no error in this case
-        result = to_unicode(text, ['windows_1250'])
-        self.assertEqual(result, expected)
+        # Decoding incorrectly throws no error in this case
+        assert to_unicode(b'Ume\xe5', ['windows_1250']) == 'Umeĺ'
 
     def test_expected_decoding_loudly_wrong(self):
         """An expected decoding can fall back to another encoding."""
         text = b'\xff\xfe\xb5\x03\xbb\x03\xbb\x03\xb7\x03\xbd\x03\xb9\x03\xba\x03\xac\x03'
-        expected = 'ελληνικά'
-        result = to_unicode(text, ['iso-2022-jp', 'utf16'])  # `text` is utf16
-        self.assertEqual(result, expected)
+        # `text` is encoded in utf16
+        assert to_unicode(text, ['iso-2022-jp', 'utf16']) == 'ελληνικά'
 
 
-class TestToBytes(TestCase):
+class TestToBytes:
     def test_unicode(self):
-        text = 'ಠ_ಠ'
-        expected = b'\xe0\xb2\xa0_\xe0\xb2\xa0'
-        result = to_bytes(text)
-        self.assertEqual(result, expected)
+        assert to_bytes('ಠ_ಠ') == b'\xe0\xb2\xa0_\xe0\xb2\xa0'
 
     def test_already_bytes(self):
         text = b'bytes!'
-        result = to_bytes(text)
-        self.assertEqual(result, text)
+        assert to_bytes(text) == text
 
     def test_not_bytes_or_string(self):
-        with self.assertRaises(AttributeError):
+        with pytest.raises(AttributeError):
             to_bytes(None)
 
 
-class TestChunkMessage(TestCase):
+class TestChunkMessage:
     """Test the behaviour of the chunk_message function."""
     def test_return_type(self):
         """Does it return a list of bytes objects?"""
-        expected = [b'Just a simple message']
         messages = chunk_message('Just a simple message', max_length=100)
-        self.assertEqual(messages, expected)
+        assert messages == [b'Just a simple message']
 
     def test_split_linefeeds(self):
         """Does it split on newline chars?"""
@@ -102,8 +79,7 @@ class TestChunkMessage(TestCase):
             b'many lines',
             b'with odd linebreaks.',
         ]
-        messages = chunk_message(msg, max_length=100)
-        self.assertEqual(messages, expected)
+        assert chunk_message(msg, max_length=100) == expected
 
     def test_split_long_line(self):
         """Does it split long lines?"""
@@ -114,8 +90,7 @@ class TestChunkMessage(TestCase):
             b'twenty characters or',
             b'less.',
         ]
-        messages = chunk_message(msg, max_length=20)
-        self.assertEqual(messages, expected)
+        assert chunk_message(msg, max_length=20) == expected
 
     def test_split_long_word(self):
         """Does it split long words?"""
@@ -126,8 +101,7 @@ class TestChunkMessage(TestCase):
             b'gogerychwyrndrobwlll',
             b'lantysiliogogogoch?',
         ]
-        messages = chunk_message(msg, max_length=20)
-        self.assertEqual(messages, expected)
+        assert chunk_message(msg, max_length=20) == expected
 
     def test_split_long_unicode(self):
         """Are words with multi-byte chars split correctly?"""
@@ -138,11 +112,10 @@ class TestChunkMessage(TestCase):
             to_bytes('すことで、成'),
             to_bytes('功に至る。'),
         ]
-        messages = chunk_message(msg, max_length=20)
-        self.assertEqual(messages, expected)
+        assert chunk_message(msg, max_length=20) == expected
 
 
-class TestRequiredAttributesMixin(TestCase):
+class TestRequiredAttributesMixin:
     """Tests for RequiredAttributesMixin"""
     def test_kwarg(self):
         """Attributes can be passed through as kwargs."""
@@ -150,7 +123,7 @@ class TestRequiredAttributesMixin(TestCase):
             required_attributes = ['foo']
 
         result = RequiresFoo(foo='bar')
-        self.assertEqual(result.foo, 'bar')
+        assert result.foo == 'bar'
 
     def test_attribute(self):
         """Attributes can be set directly on the class."""
@@ -159,7 +132,7 @@ class TestRequiredAttributesMixin(TestCase):
             required_attributes = ['foo']
 
         result = RequiresFoo()
-        self.assertEqual(result.foo, 'bar')
+        assert result.foo == 'bar'
 
     def test_kwargs_overrides_attribute(self):
         """Attributes set on the class should be overridden by kwargs."""
@@ -168,14 +141,14 @@ class TestRequiredAttributesMixin(TestCase):
             required_attributes = ['foo']
 
         result = RequiresFoo(foo='baz')
-        self.assertEqual(result.foo, 'baz')
+        assert result.foo == 'baz'
 
     def test_attibute_not_set(self):
         """Failing to set the attribute should raise an error."""
         class RequiresFoo(RequiredAttributesMixin):
             required_attributes = ['foo']
 
-        with self.assertRaises(exceptions.MissingAttributes):
+        with pytest.raises(exceptions.MissingAttributes):
             RequiresFoo()
 
     def test_error_description(self):
@@ -183,8 +156,7 @@ class TestRequiredAttributesMixin(TestCase):
         class RequiresFoo(RequiredAttributesMixin):
             required_attributes = ['foo']
 
-        with self.assertRaises(exceptions.MissingAttributes) as cm:
+        with pytest.raises(exceptions.MissingAttributes) as exception:
             RequiresFoo()
 
-        expectied = "Required attribute(s) missing: ['foo']"
-        self.assertEqual(str(cm.exception), expectied)
+        assert "Required attribute(s) missing: ['foo']" in str(exception)

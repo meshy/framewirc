@@ -1,17 +1,17 @@
-def command_blacklist(blacklist):
+def deny(blacklist):
     """
     Decorates a handler to filter out a blacklist of commands.
 
     The decorated handler will not be called if message.command is in the
     blacklist:
 
-        @command_blacklist(['A', 'B'])
+        @deny(['A', 'B'])
         def handle_everything_except_a_and_b(client, message):
             pass
 
     Single-item blacklists may be passed as a string:
 
-        @command_blacklist('THIS')
+        @deny('THIS')
         def handle_everything_except_this(client, message):
             pass
     """
@@ -25,20 +25,20 @@ def command_blacklist(blacklist):
     return inner_decorator
 
 
-def command_whitelist(whitelist):
+def allow(whitelist):
     """
     Decorates a handler to filter all except a whitelist of commands
 
     The decorated handler will only be called if message.command is in the
     whitelist:
 
-        @command_whitelist(['A', 'B'])
+        @allow(['A', 'B'])
         def handle_only_a_and_b(client, message):
             pass
 
     Single-item whitelists may be passed as a string:
 
-        @command_whitelist('THIS')
+        @allow('THIS')
         def handle_only_this(client, message):
             pass
     """

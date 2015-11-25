@@ -5,7 +5,7 @@ help:
 	@echo " make test | Run the tests."
 
 test:
-	@coverage run -m unittest discover
+	@coverage run -m py.test
 	@coverage report
 	@flake8
 

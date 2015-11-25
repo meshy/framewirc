@@ -25,10 +25,11 @@ documentation.)
 ```python
 import asyncio
 
-from framewirc import filters
+from framewirc import filters, parsers
 from framewirc.client import Client
 from framewirc.commands import PRIVMSG
 from framewirc.handlers import basic_handlers
+from framewirc.utils import to_unicode
 
 
 quips = {
@@ -37,15 +38,14 @@ quips = {
 }
 
 
-@filters.command_whitelist(PRIVMSG)
-def snarky_response(client, message):
-    # See section "Still to come" for ideas on how this could be simplified.
-    sender = message.prefix.split('!')[0]
-    text = message.suffix
+@filters.allow(PRIVMSG)
+@parsers.apply_message_parser(parsers.privmsg)
+def snarky_response(client, channel, raw_body, **kwargs):
+    body = to_unicode(raw_body)
 
-    for trigger, reposte in quips.items():
-        if trigger in text:
-            client.privmsg(sender, reposte)
+    for trigger, riposte in quips.items():
+        if trigger in body:
+            client.privmsg(channel, riposte)
 
 
 class SnarkyClient(Client):
@@ -78,7 +78,8 @@ messages in both directions must adhere to the (simple) rules:
 
   There is no default encoding, so sometimes one just has to guess! To guess
   how to turn these streams of bytes into Python strings, we have elected to
-  use [`cChardet`][cchardet-home] for this in `utils.to_unicode`.
+  use [`cChardet`][cchardet-home] in `utils.to_unicode` when utf8 fails. If you
+  know the encoding, you can override this behaviour.
 
 - Messages have a relatively simple structure.
 
@@ -93,9 +94,10 @@ messages in both directions must adhere to the (simple) rules:
 
   We represent the messages that come from the network with our own subclass of
   `bytes` called `ReceivedMessage`. It has `prefix`, `command`, `parameters`,
-  and `suffix` added for convinience. Each of these attributes represents the
-  relevant message parts as a unicode string (except `parameters`, which is a
-  tuple of strings).
+  and `suffix` added for convinience. The `prefix` and `command` parts are
+  represented as unicode strings, `parameters`is a tuple of unicode strings,
+  but `suffix` is a bytestring. This allows for custom logic in decoding
+  arbitrary text from the network.
 
 - Messages have a maximum length of 512 bytes.
 
@@ -125,9 +127,9 @@ decision about how they will deal with the message.
 
 As most of your handlers will not need to deal with every message that comes
 in, we can remove the boilerplate of `if message.command == MYCOMMAND` through
-use of the decorators in the `filters` module. The `command_whitelist` filter
-only allows messages through to the handler that are in its whitelist. The
-`command_blacklist` does the opposite. eg:
+use of the decorators in the `filters` module. The `allow` filter only allows
+messages through to the handler that are in its whitelist. The `deny` filter
+does the opposite. eg:
 
 ```python
 # Rather than this:
@@ -137,7 +139,7 @@ def my_command_handler(client, message):
     do_useful_logic(message)
 
 # It's nicer to have this:
-@command_whitelist(MYCOMMAND):
+@allow(MYCOMMAND):
 def my_simpler_command_handler(client, message):
     do_useful_logic(message)
 ```
@@ -159,14 +161,10 @@ this by hand, so use the `utils.build_message` method to help you.
 
 Features that I am hoping to implement in future:
 
-- More layers of abstraction from the IRC protocol.
+- More message parsers
 
-  In particular, I would like to call handlers with more intelligent kwargs
-  when dealing with known types of events. This might mean that a handler of
-  `PRIVMSG`s is sent `client, sender, recipient, text` rather than just
-  `client, message`. That `sender` might also need some special treatment as
-  the names of other users are often sent as `username!ident@host.example.com`
-  but need to be replied to as simply `username`.
+  At the moment, we only have a special parser for `PRIVMSG` messages, but
+  there is room for loads more.
 
 - Handle more text encodings.
 

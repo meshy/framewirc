@@ -63,7 +63,7 @@ def build_message(command, *args, prefix=b'', suffix=b''):
     message = message + LINEFEED
 
     # Must not exceed 512 characters in length.
-    if len(message) > 512:
+    if len(message) > MAX_LENGTH:
         raise exceptions.MessageTooLong
 
     return message

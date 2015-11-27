@@ -3,7 +3,7 @@
 This project is in alpha. I plan to adhere to [semantic versioning][semver]
 once the API is stable.
 
-## Unreleased
+## v0.1.0
 
 - CHANGED: Renamed `filters.command_blacklist` to `filters.deny`.
 

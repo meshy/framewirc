@@ -122,7 +122,7 @@ authentication bot. (Don't forget to call `super` though!)
 ### Handling commands from the network
 
 When the `Connection` receives a message, the `Client` will send that message
-(and itself) to every one of its `handers` in turn. This allows them to make a
+(and itself) to every one of its `handlers` in turn. This allows them to make a
 decision about how they will deal with the message.
 
 As most of your handlers will not need to deal with every message that comes

@@ -37,10 +37,13 @@ def nick(raw_nick):
     if '!' in raw_nick:
         nick, _rest = raw_nick.split('!')
         ident, host = _rest.split('@')
-    else:
+    elif '@' in raw_nick:
         nick, host = raw_nick.split('@')
         nick = nick.lstrip('~')
         ident = None
+    else:
+        nick = raw_nick
+        ident = host = None
     return {
         'nick': nick,
         'ident': ident,

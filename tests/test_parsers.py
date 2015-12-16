@@ -74,6 +74,14 @@ class TestNick:
         }
         assert nick('~nickname@hostname') == expected
 
+    def test_nick_on_its_own(self):
+        expected = {
+            'nick': 'nickname',
+            'ident': None,
+            'host': None,
+        }
+        assert nick('nickname') == expected
+
 
 class TestPrivmsg:
     def processed_message(

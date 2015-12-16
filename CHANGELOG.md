@@ -3,6 +3,12 @@
 This project is in alpha. I plan to adhere to [semantic versioning][semver]
 once the API is stable.
 
+## Unreleased
+
+- FIXED: `parsers.nick`.
+
+  No longer falls over on nicks that are already just nicks (no ident, etc).
+
 ## v0.1.0
 
 - CHANGED: Renamed `filters.command_blacklist` to `filters.deny`.

@@ -181,3 +181,18 @@ class TestMakePrivMsgs:
 
         expected_max = 495  # 512 - len(r'PRIVMSG meshy :' + '\r\n')
         chunk_message.assert_called_with(msg, max_length=expected_max)
+
+    def test_third_person(self):
+        """Are third person messages marked?"""
+        expected = [b'PRIVMSG meshy :\1ACTION is in 3rd person\1\r\n']
+        messages = make_privmsgs('meshy', 'is in 3rd person', third_person=True)
+        assert messages == expected
+
+    def test_third_person_max_length(self):
+        """Are third person messages wrapped correctly?"""
+        msg = 'A test message'
+        with mock.patch('framewirc.message.chunk_message') as chunk_message:
+            make_privmsgs('meshy', msg, third_person=True)
+
+        expected_max = 486  # 512 - len(b'PRIVMSG meshy :\1ACTION ' + b'\1\r\n')
+        chunk_message.assert_called_with(msg, max_length=expected_max)

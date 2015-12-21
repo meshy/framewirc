@@ -2,6 +2,8 @@ from . import commands, exceptions
 from .utils import chunk_message, LINEFEED, to_bytes, to_unicode
 
 
+ACTION_START = b'\1ACTION '
+ACTION_END = b'\1'
 MAX_LENGTH = 512  # The largest legal size of an IRC command.
 
 
@@ -69,10 +71,16 @@ def build_message(command, *args, prefix=b'', suffix=b''):
     return message
 
 
-def make_privmsgs(target, message):
+def make_privmsgs(target, message, third_person=False):
     """Turn a string into a number of PRIVMSG commands."""
-    max_length = MAX_LENGTH - (len(commands.PRIVMSG) + len(target) + 5)
+    overhead = 5  # Two spaces, a colon, and the \r\n line ending.
+    if third_person:
+        overhead += len(ACTION_START) + len(ACTION_END)
+
+    max_length = MAX_LENGTH - (len(commands.PRIVMSG) + len(target) + overhead)
     messages = []
     for line in chunk_message(message, max_length=max_length):
+        if third_person:
+            line = ACTION_START + line + ACTION_END
         messages.append(build_message(commands.PRIVMSG, target, suffix=line))
     return messages

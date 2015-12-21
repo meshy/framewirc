@@ -80,6 +80,14 @@ class TestPrivmsg:
         ]
         client.connection.send_batch.assert_called_once_with(expected)
 
+    def test_third_person_message(self):
+        client = BlankClient()
+        client.connection = mock.MagicMock(spec=Connection)
+        client.privmsg('#channel', 'is speaking in 3rd person!', third_person=True)
+
+        expected = [b'PRIVMSG #channel :\1ACTION is speaking in 3rd person!\1\r\n']
+        client.connection.send_batch.assert_called_once_with(expected)
+
 
 class TestRequiredFields:
     """Test to show that RequiredAttribuesMixin is properly configured."""

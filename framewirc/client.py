@@ -28,8 +28,8 @@ class Client(utils.RequiredAttributesMixin):
         for handler in self.handlers:
             handler(self, message)
 
-    def privmsg(self, target, message):
-        self.connection.send_batch(make_privmsgs(target, message))
+    def privmsg(self, target, message, third_person=False):
+        self.connection.send_batch(make_privmsgs(target, message, third_person))
 
     def set_nick(self, new_nick):
         """Set a nick on the network."""

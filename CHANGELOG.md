@@ -4,10 +4,13 @@ This project is in alpha. I plan to adhere to [semantic versioning][semver]
 once the API is stable.
 
 ## Unreleased
+- ADDED: `client.Client.privmsg` now takes `third_person`.
+
+  This can be used to send third person messages. (`/me likes this :D`)
 
 - ADDED: `message.make_privmsgs` now takes `third_person`.
 
-  This can be used to create third person messages. (`/me likes this :D`)
+  This can be used to create third person messages. (`/me also likes this :D`)
 
 - FIXED: `parsers.nick`.
 

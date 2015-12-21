@@ -179,7 +179,7 @@ class TestMakePrivMsgs:
         with mock.patch('framewirc.message.chunk_message') as chunk_message:
             make_privmsgs('meshy', msg)
 
-        expected_max = 495  # 512 - len(r'PRIVMSG meshy :' + '\r\n')
+        expected_max = 495  # 512 - len(b'PRIVMSG meshy :' + b'\r\n')
         chunk_message.assert_called_with(msg, max_length=expected_max)
 
     def test_third_person(self):

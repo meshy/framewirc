@@ -139,7 +139,7 @@ def my_command_handler(client, message):
     do_useful_logic(message)
 
 # It's nicer to have this:
-@allow(MYCOMMAND):
+@allow(MYCOMMAND)
 def my_simpler_command_handler(client, message):
     do_useful_logic(message)
 ```

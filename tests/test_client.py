@@ -15,14 +15,16 @@ class TestConnectTo:
     def test_connection_stored(self):
         """Has "connection" been stored on the client?"""
         client = BlankClient()
-        with mock.patch('asyncio.Task', spec=asyncio.Task):
+        mock_path = 'asyncio.BaseEventLoop.create_task'
+        with mock.patch(mock_path, spec=asyncio.Task):
             client.connect_to('irc.example.com')
         assert isinstance(client.connection, Connection)
 
     def test_task_returned(self):
         """Is the correct "Task" created and returned?"""
         client = BlankClient()
-        with mock.patch('asyncio.Task', spec=asyncio.Task) as Task:
+        mock_path = 'asyncio.BaseEventLoop.create_task'
+        with mock.patch(mock_path, spec=asyncio.Task) as Task:
             result = client.connect_to('irc.example.com')
         assert result == Task(client.connection.connect())
 

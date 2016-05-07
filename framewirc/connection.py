@@ -15,17 +15,16 @@ class Connection(utils.RequiredAttributesMixin):
     port = 6697
     ssl = True
 
-    @asyncio.coroutine
-    def connect(self):
+    async def connect(self):
         """Connect to the server, and dispatch incoming messages."""
         connection = asyncio.open_connection(self.host, self.port, ssl=self.ssl)
-        self.reader, self.writer = yield from connection
+        self.reader, self.writer = await connection
 
         self._connected = True
         self.client.on_connect()
 
         while self._connected:
-            raw_message = yield from self.reader.readline()
+            raw_message = await self.reader.readline()
             self.handle(raw_message)
 
     def disconnect(self):

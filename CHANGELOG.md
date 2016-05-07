@@ -4,7 +4,7 @@ This project is in alpha. I plan to adhere to [semantic versioning][semver]
 once the API is stable.
 
 ## Unreleased
-- CHANGED: Dropped support for Python `3.4`.
+- REMOVED: Support for Python `3.4` has been removed.
 
 - ADDED: `client.Client.privmsg` now takes `third_person`.
 

@@ -14,7 +14,8 @@ class Client(utils.RequiredAttributesMixin):
     def connect_to(self, host, **kwargs):
         """Create a Connection. Handled in the event loop."""
         self.connection = self.connection_class(client=self, host=host, **kwargs)
-        return asyncio.Task(self.connection.connect())
+        loop = asyncio.get_event_loop()
+        return loop.create_task(self.connection.connect())
 
     def on_connect(self):
         """We're connected! Send our identity to the network!"""

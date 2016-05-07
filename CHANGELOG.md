@@ -16,6 +16,11 @@ once the API is stable.
 
   No longer falls over on nicks that are already just nicks (no ident, etc).
 
+- FIXED: `client.Client.connect_to`.
+
+  No longer directly instantiates `asycio.Task`. This allows custom loops to
+  customise `Task`. See #18.
+
 ## v0.1.0
 
 - CHANGED: Renamed `filters.command_blacklist` to `filters.deny`.

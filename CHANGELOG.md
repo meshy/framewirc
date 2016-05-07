@@ -4,6 +4,8 @@ This project is in alpha. I plan to adhere to [semantic versioning][semver]
 once the API is stable.
 
 ## Unreleased
+- CHANGED: Dropped support for Python `3.4`.
+
 - ADDED: `client.Client.privmsg` now takes `third_person`.
 
   This can be used to send third person messages. (`/me likes this :D`)

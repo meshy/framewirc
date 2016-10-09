@@ -177,8 +177,8 @@ Features that I am hoping to implement in future:
 - Full API documentation.
 
   I would really like to document the full API, not just the basics. I'd also
-  like to explain my rationale for the design decisions I took, and why I feel
-  that they contrast to what is currently available elsewhere.
+  like to explain my rationale for the design decisions I took, and how the
+  library contrasts to what is currently available elsewhere.
 
 [cchardet-home]: https://github.com/PyYoshi/cChardet/
 [cchardet-issue-13]: https://github.com/PyYoshi/cChardet/issues/13

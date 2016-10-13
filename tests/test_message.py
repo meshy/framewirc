@@ -4,7 +4,8 @@ from unittest import mock
 import pytest
 
 from framewirc import exceptions
-from framewirc.message import build_message, make_privmsgs, ReceivedMessage
+from framewirc.message import build_message, chunk_message, make_privmsgs, ReceivedMessage
+from framewirc.strings import to_bytes
 
 
 on_off = True, False
@@ -115,6 +116,58 @@ class TestBuildMessageExceptions:
         """Make sure that the the message cannot be longer than 512 bytes."""
         with pytest.raises(exceptions.MessageTooLong):
             build_message('A' * 511)  # 513 chars when \r\n added.
+
+
+class TestChunkMessage:
+    """Test the behaviour of the chunk_message function."""
+    def test_return_type(self):
+        """Does it return a list of bytes objects?"""
+        messages = chunk_message('Just a simple message', max_length=100)
+        assert messages == [b'Just a simple message']
+
+    def test_split_linefeeds(self):
+        """Does it split on newline chars?"""
+        msg = 'A message\rsplit over\nmany lines\r\nwith odd linebreaks.'
+        expected = [
+            b'A message',
+            b'split over',
+            b'many lines',
+            b'with odd linebreaks.',
+        ]
+        assert chunk_message(msg, max_length=100) == expected
+
+    def test_split_long_line(self):
+        """Does it split long lines?"""
+        msg = 'Message to be split into chunks of twenty characters or less.'
+        expected = [
+            b'Message to be split',
+            b'into chunks of',
+            b'twenty characters or',
+            b'less.',
+        ]
+        assert chunk_message(msg, max_length=20) == expected
+
+    def test_split_long_word(self):
+        """Does it split long words?"""
+        msg = 'Sup Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch?'
+        expected = [
+            b'Sup',
+            b'Llanfairpwllgwyngyll',
+            b'gogerychwyrndrobwlll',
+            b'lantysiliogogogoch?',
+        ]
+        assert chunk_message(msg, max_length=20) == expected
+
+    def test_split_long_unicode(self):
+        """Are words with multi-byte chars split correctly?"""
+        # Repeated failures lead to success.
+        msg = '失敗を繰り返すことで、成功に至る。'
+        expected = [
+            to_bytes('失敗を繰り返'),
+            to_bytes('すことで、成'),
+            to_bytes('功に至る。'),
+        ]
+        assert chunk_message(msg, max_length=20) == expected
 
 
 class TestMakePrivMsgs:

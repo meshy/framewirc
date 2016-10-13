@@ -4,6 +4,8 @@ This project is in alpha. I plan to adhere to [semantic versioning][semver]
 once the API is stable.
 
 ## Unreleased
+- CHANGED: Moved `chunk_message` from `framewirc.utils` to `framewirc.message`.
+
 - REMOVED: Support for Python `3.4` has been removed.
 
 - ADDED: `client.Client.privmsg` now takes `third_person`.

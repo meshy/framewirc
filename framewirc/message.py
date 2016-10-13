@@ -1,7 +1,8 @@
 from collections import deque
 
 from . import commands, exceptions
-from .utils import LINEFEED, to_bytes, to_unicode
+from .strings import to_bytes, to_unicode
+from .utils import LINEFEED
 
 
 ACTION_START = b'\1ACTION '

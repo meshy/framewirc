@@ -4,7 +4,12 @@ from unittest import mock
 import pytest
 
 from framewirc import exceptions
-from framewirc.message import build_message, chunk_message, make_privmsgs, ReceivedMessage
+from framewirc.messages import (
+    build_message,
+    chunk_message,
+    make_privmsgs,
+    ReceivedMessage,
+)
 from framewirc.strings import to_bytes
 
 
@@ -229,7 +234,7 @@ class TestMakePrivMsgs:
     def test_max_length(self):
         """Is the correct max_length calculated?"""
         msg = 'A test message'
-        with mock.patch('framewirc.message.chunk_message') as chunk_message:
+        with mock.patch('framewirc.messages.chunk_message') as chunk_message:
             make_privmsgs('meshy', msg)
 
         expected_max = 495  # 512 - len(b'PRIVMSG meshy :' + b'\r\n')
@@ -244,7 +249,7 @@ class TestMakePrivMsgs:
     def test_third_person_max_length(self):
         """Are third person messages wrapped correctly?"""
         msg = 'A test message'
-        with mock.patch('framewirc.message.chunk_message') as chunk_message:
+        with mock.patch('framewirc.messages.chunk_message') as chunk_message:
             make_privmsgs('meshy', msg, third_person=True)
 
         expected_max = 486  # 512 - len(b'PRIVMSG meshy :\1ACTION ' + b'\1\r\n')

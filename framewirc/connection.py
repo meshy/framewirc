@@ -2,7 +2,7 @@ import asyncio
 
 from . import exceptions
 from . import utils
-from .message import MAX_LENGTH, ReceivedMessage
+from .messages import MAX_LENGTH, ReceivedMessage
 
 
 class Connection(utils.RequiredAttributesMixin):

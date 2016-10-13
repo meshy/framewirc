@@ -1,7 +1,7 @@
 from unittest import mock
 
 from framewirc import filters
-from framewirc.message import ReceivedMessage
+from framewirc.messages import ReceivedMessage
 
 
 class TestDeny:

@@ -4,11 +4,13 @@ This project is in alpha. I plan to adhere to [semantic versioning][semver]
 once the API is stable.
 
 ## Unreleased
+- CHANGED: Renamed `framewirc.message` module to `framewirc.messages`.
+
 - CHANGED: Moved `to_bytes` from `framewirc.utils` to `framewirc.strings`.
 
 - CHANGED: Moved `to_unicode` from `framewirc.utils` to `framewirc.strings`.
 
-- CHANGED: Moved `chunk_message` from `framewirc.utils` to `framewirc.message`.
+- CHANGED: Moved `chunk_message` from `framewirc.utils` to `framewirc.messages`.
 
 - REMOVED: Support for Python `3.4` has been removed.
 

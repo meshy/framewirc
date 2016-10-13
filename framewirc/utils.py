@@ -55,6 +55,9 @@ def to_unicode(bytestring, encodings=('utf8',)):
     for encoding in encodings:
         try:
             return bytestring.decode(encoding)
+        except AttributeError:
+            msg = '`bytestring` should be `ReceivedMessage` or `bytes`.'
+            raise TypeError(msg)
         except UnicodeDecodeError:
             continue
 
@@ -70,7 +73,8 @@ def to_bytes(string):
         return string.encode()
     except AttributeError:
         if not isinstance(string, bytes):
-            raise
+            msg = '`string` should be `unicode` or `bytes`.'
+            raise TypeError(msg)
         return string
 
 

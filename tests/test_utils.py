@@ -22,7 +22,7 @@ class TestToUnicode:
         assert to_unicode(b'Miko\xb3aj Kopernik') == 'Mikołaj Kopernik'
 
     def test_not_bytes_or_string(self):
-        with pytest.raises(AttributeError):
+        with pytest.raises(TypeError):
             to_unicode(None)
 
     def test_expected_decoding_first(self):
@@ -59,7 +59,7 @@ class TestToBytes:
         assert to_bytes(text) == text
 
     def test_not_bytes_or_string(self):
-        with pytest.raises(AttributeError):
+        with pytest.raises(TypeError):
             to_bytes(None)
 
 

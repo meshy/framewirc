@@ -23,6 +23,11 @@ once the API is stable.
   No longer directly instantiates `asycio.Task`. This allows custom loops to
   customise `Task`. See #18.
 
+- FIXED: `utils.to_bytes` and `utils.to_unicode` now throw the correct error.
+
+  Previously, when passed an instance of the wrong type, these functions would
+  throw `AttributeError`. Now, correctly, they throw `TypeError`.
+
 ## v0.1.0
 
 - CHANGED: Renamed `filters.command_blacklist` to `filters.deny`.

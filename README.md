@@ -29,7 +29,7 @@ from framewirc import filters, parsers
 from framewirc.client import Client
 from framewirc.commands import PRIVMSG
 from framewirc.handlers import basic_handlers
-from framewirc.utils import to_unicode
+from framewirc.strings import to_unicode
 
 
 quips = {
@@ -78,8 +78,8 @@ messages in both directions must adhere to the (simple) rules:
 
   There is no default encoding, so sometimes one just has to guess! To guess
   how to turn these streams of bytes into Python strings, we have elected to
-  use [`cChardet`][cchardet-home] in `utils.to_unicode` when utf8 fails. If you
-  know the encoding, you can override this behaviour.
+  use [`cChardet`][cchardet-home] in `strings.to_unicode` when utf8 fails. If
+  you know the encoding, you can override this behaviour.
 
 - Messages have a relatively simple structure.
 
@@ -103,7 +103,7 @@ messages in both directions must adhere to the (simple) rules:
 
   This means that when we want to send something longer to the network, we have
   to split it up into smaller chunks. This can be done using
-  `utils.chunk_message`.
+  `messages.chunk_message`.
 
 
 ### Connecting
@@ -154,7 +154,7 @@ very common actions, expect this part of the API to change and expand.
 
 To send other messages to the network, you need to construct an appropriate
 byte string, and pass it to `Connection.send`. You will probably not want to do
-this by hand, so use the `utils.build_message` method to help you.
+this by hand, so use the `messages.build_message` method to help you.
 
 
 ## Still to come

@@ -1,6 +1,6 @@
 from unittest import mock
 
-from framewirc.message import build_message, ReceivedMessage
+from framewirc.messages import build_message, ReceivedMessage
 from framewirc.parsers import (
     apply_kwargs_parser,
     apply_message_parser,

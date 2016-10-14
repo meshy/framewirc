@@ -3,7 +3,7 @@ import asyncio
 from . import commands
 from . import utils
 from .connection import Connection
-from .message import build_message, make_privmsgs
+from .messages import build_message, make_privmsgs
 
 
 class Client(utils.RequiredAttributesMixin):

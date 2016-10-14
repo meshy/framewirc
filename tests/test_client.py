@@ -6,7 +6,7 @@ import pytest
 from framewirc import exceptions
 from framewirc.client import Client
 from framewirc.connection import Connection
-from framewirc.message import ReceivedMessage
+from framewirc.messages import ReceivedMessage
 
 from .utils import BlankClient
 

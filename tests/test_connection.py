@@ -11,7 +11,7 @@ from framewirc.exceptions import (
     NoLineEnding,
     StrayLineEnding,
 )
-from framewirc.message import ReceivedMessage
+from framewirc.messages import ReceivedMessage
 
 from .utils import BlankClient
 

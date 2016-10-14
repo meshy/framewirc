@@ -1,5 +1,5 @@
 from . import commands, filters
-from .message import build_message
+from .messages import build_message
 
 
 @filters.allow(commands.PING)

@@ -1,7 +1,6 @@
 import asyncio
 
-from . import commands
-from . import utils
+from . import commands, utils
 from .connection import Connection
 from .messages import build_message, make_privmsgs
 

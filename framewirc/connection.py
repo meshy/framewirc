@@ -1,7 +1,6 @@
 import asyncio
 
-from . import exceptions
-from . import utils
+from . import exceptions, utils
 from .messages import MAX_LENGTH, ReceivedMessage
 
 

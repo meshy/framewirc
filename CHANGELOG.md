@@ -14,6 +14,8 @@ once the API is stable.
 
 - REMOVED: Support for Python `3.4` has been removed.
 
+- ADDED: Support for Python `3.5` and `3.6` has been added.
+
 - ADDED: `client.Client.privmsg` now takes `third_person`.
 
   This can be used to send third person messages. (`/me likes this :D`)

@@ -149,8 +149,9 @@ def my_simpler_command_handler(client, message):
 
 The `Client` has a couple of helper methods for sending commands to the
 network. You can send messages to users or channels with `Client.privmsg()`,
-and change your nick with `Client.set_nick()`. As there are a number of other
-very common actions, expect this part of the API to change and expand.
+and change your nick with `Client.set_nick()`. You can also join channels with
+`Client.join()` and leave them with `Client.part()`. As there are a number of
+other very common actions, expect this part of the API to change and expand.
 
 To send other messages to the network, you need to construct an appropriate
 byte string, and pass it to `Connection.send`. You will probably not want to do

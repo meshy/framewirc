@@ -29,6 +29,24 @@ class TestConnectTo:
         assert result == Task(client.connection.connect())
 
 
+class TestJoin:
+    """Test the Client.join() method."""
+    def setup_method(self, method):
+        """Can't make an IRC connection in tests, so a mock will have to do."""
+        self.client = BlankClient()
+        self.client.connection = mock.MagicMock(spec=Connection)
+
+    def test_singular(self):
+        """Can join a channel on a network."""
+        self.client.join('#framewirc')
+        self.client.connection.send.assert_called_with(b'JOIN #framewirc\r\n')
+
+    def test_multiple(self):
+        """Can join multiple channels simultaneously."""
+        self.client.join('#framewirc', '#meshy')
+        self.client.connection.send.assert_called_with(b'JOIN #framewirc,#meshy\r\n')
+
+
 class TestOnMessage:
     def test_handlers_called(self):
         """When a message comes in, it should be passed to the handlers."""
@@ -59,6 +77,31 @@ class TestOnConnect:
     def test_set_nick_called(self):
         self.client.on_connect()
         self.client.connection.send.assert_called_with(b'NICK anick\r\n')
+
+
+class TestPart:
+    """Test the Client.part() method."""
+    def setup_method(self, method):
+        """Can't make an IRC connection in tests, so a mock will have to do."""
+        self.client = BlankClient()
+        self.client.connection = mock.MagicMock(spec=Connection)
+
+    def test_singular(self):
+        """It's possible to leave a channel."""
+        self.client.part('#framewirc')
+        self.client.connection.send.assert_called_with(b'PART #framewirc\r\n')
+
+    def test_message(self):
+        """If provided with a parting message, pass it on."""
+        self.client.part('#framewirc', message='Leeroy Jenkins!')
+        expected = b'PART #framewirc :Leeroy Jenkins!\r\n'
+        self.client.connection.send.assert_called_with(expected)
+
+    def test_multiple(self):
+        """When passed multiple channels, leave them all."""
+        self.client.part('#framewirc', '#meshy')
+        expected = b'PART #framewirc,#meshy\r\n'
+        self.client.connection.send.assert_called_with(expected)
 
 
 class TestPrivmsg:

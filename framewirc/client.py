@@ -16,6 +16,11 @@ class Client(utils.RequiredAttributesMixin):
         loop = asyncio.get_event_loop()
         return loop.create_task(self.connection.connect())
 
+    def join(self, *channels):
+        """Join a number of channels."""
+        msg = build_message(commands.JOIN, ','.join(channels))
+        self.connection.send(msg)
+
     def on_connect(self):
         """We're connected! Send our identity to the network!"""
         nick = self.nick
@@ -27,6 +32,11 @@ class Client(utils.RequiredAttributesMixin):
         """Get a message from IRC and send it to all handlers."""
         for handler in self.handlers:
             handler(self, message)
+
+    def part(self, *channels, message=b''):
+        """Part from a number of channels (message optional)."""
+        msg = build_message(commands.PART, ','.join(channels), suffix=message)
+        self.connection.send(msg)
 
     def privmsg(self, target, message, third_person=False):
         self.connection.send_batch(make_privmsgs(target, message, third_person))

@@ -24,6 +24,10 @@ once the API is stable.
 
   This can be used to create third person messages. (`/me also likes this :D`)
 
+- ADDED: `client.Client.join`.
+
+- ADDED: `client.Client.part`.
+
 - FIXED: `parsers.nick`.
 
   No longer falls over on nicks that are already just nicks (no ident, etc).

@@ -234,7 +234,7 @@ class TestMakePrivMsgs:
     def test_long_line(self):
         too_long = (
             "We're no strangers to love, You know the rules and so do I. " +
-            "A full commitment's what I'm thinking of, You wouldnt get " +
+            "A full commitment's what I'm thinking of, You wouldn't get " +
             "this from any other guy. I just wanna tell you how I'm " +
             "feeling, Gotta make you understand… Never gonna give you up, " +
             "Never gonna let you down, Never gonna run around and desert " +
@@ -248,7 +248,7 @@ class TestMakePrivMsgs:
             (
                 b"PRIVMSG meshy :We're no strangers to love, You know the " +
                 b"rules and so do I. A full commitment's what I'm thinking " +
-                b"of, You wouldnt get this from any other guy. I just wanna " +
+                b"of, You wouldn't get this from any other guy. I just wanna " +
                 b"tell you how I'm feeling, Gotta make you " +
                 b"understand\xe2\x80\xa6 Never gonna give you up, Never " +
                 b"gonna let you down, Never gonna run around and desert " +

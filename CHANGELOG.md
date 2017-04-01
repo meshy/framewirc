@@ -24,6 +24,10 @@ once the API is stable.
 
   This can be used to create third person messages. (`/me also likes this :D`)
 
+- ADDED: `message.make_privmsgs` now takes `mask_length`.
+
+  This accounts for the network added overhead (sender) on messages.
+
 - ADDED: `client.Client.join`.
 
 - ADDED: `client.Client.part`.

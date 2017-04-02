@@ -28,6 +28,10 @@ once the API is stable.
 
   This accounts for the network added overhead (sender) on messages.
 
+- ADDED: `client.Client` now has `mask_length` attribute.
+
+  Allows fine-tuning of sender mask overhead size for splitting messages.
+
 - ADDED: `client.Client.join`.
 
 - ADDED: `client.Client.part`.

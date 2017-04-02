@@ -133,6 +133,21 @@ class TestPrivmsg:
         expected = [b'PRIVMSG #channel :\1ACTION is speaking in 3rd person!\1\r\n']
         client.connection.send_batch.assert_called_once_with(expected)
 
+    def test_mask_length(self):
+        mask_length = mock.Mock()
+        client = BlankClient(mask_length=mask_length)
+        client.connection = mock.MagicMock(spec=Connection)
+        message = 'We know the size of the mask!'
+        with mock.patch('framewirc.client.make_privmsgs') as make_privmsgs:
+            client.privmsg('#channel', message)
+
+        make_privmsgs.assert_called_once_with(
+            '#channel',
+            message,
+            third_person=False,
+            mask_length=mask_length,
+        )
+
 
 class TestRequiredFields:
     """Test to show that RequiredAttribuesMixin is properly configured."""

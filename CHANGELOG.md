@@ -32,6 +32,11 @@ once the API is stable.
 
   Allows fine-tuning of sender mask overhead size for splitting messages.
 
+- ADDED: `handlers.capture_mask_length` (in `handlers.basic_handlers`).
+
+  This new handler passively fine-tunes the sender mask overhead based on
+  incoming messages.
+
 - ADDED: `client.Client.join`.
 
 - ADDED: `client.Client.part`.
@@ -53,6 +58,10 @@ once the API is stable.
 - FIXED: `messages.chunk_bytes` no longer loses spaces when splitting lines.
 
 - FIXED: `messages.chunk_bytes` no longer splits lines that fit exactly.
+
+- FIXED: `messages.make_privmsgs`.
+
+  Now properly accounts for network-added sender prefix.
 
 ## v0.1.0
 

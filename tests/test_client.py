@@ -169,7 +169,7 @@ class TestSetNick:
     """Test the Client.set_nick() method."""
     def setup_method(self, method):
         """Can't make an IRC connection in tests, so a mock will have to do."""
-        self.client = BlankClient()
+        self.client = BlankClient(mask_length=42)
         self.client.connection = mock.MagicMock(spec=Connection)
 
     def test_command_sent(self):
@@ -182,3 +182,8 @@ class TestSetNick:
         new_nick = 'meshy'
         self.client.set_nick(new_nick)
         assert self.client.nick == new_nick
+
+    def test_mask_length_reset(self):
+        """When the nick changes, reset the mask_length."""
+        self.client.set_nick('meshy')
+        assert self.client.mask_length is None

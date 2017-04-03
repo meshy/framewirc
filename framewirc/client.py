@@ -52,3 +52,5 @@ class Client(utils.RequiredAttributesMixin):
         """Set a nick on the network."""
         self.connection.send(build_message(commands.NICK, new_nick))
         self.nick = new_nick
+        # As soon as the nick changes, reset mask_length.
+        self.mask_length = None

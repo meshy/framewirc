@@ -79,7 +79,7 @@ def _chunk_message(message, max_length):
     lines = deque(message.splitlines())
     while lines:
         line = lines.popleft()
-        line_bytes = to_bytes(line)
+        line_bytes = line.encode()
         # If the line fits, add it the the lines.
         if len(line_bytes) < max_length:
             yield line_bytes
@@ -90,7 +90,7 @@ def _chunk_message(message, max_length):
         spacepoint = None  # Where we should break if there is a space.
         line_length = 0  # The running total size of the line
         for i, str_char in enumerate(line):
-            char_length = len(to_bytes(str_char))
+            char_length = len(str_char.encode())
             line_length += char_length
             if str_char == ' ':
                 spacepoint = i
@@ -101,15 +101,14 @@ def _chunk_message(message, max_length):
         if spacepoint is not None:
             # Break on the last space that fits.
             start = line[:spacepoint]
-            yield to_bytes(start)
+            yield start.encode()
             # ... and add what's left back into the line pool.
             end = line[(spacepoint + 1):]
             lines.appendleft(end)
             continue
-
         # Whole line does not contain spaces, so split within word.
         start = line[:letterpoint]
-        yield to_bytes(start)
+        yield start.encode()
         end = line[letterpoint:]
         lines.appendleft(end)
 

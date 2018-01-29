@@ -174,6 +174,24 @@ class TestChunkMessage:
         ]
         assert chunk_message(msg, max_length=20) == expected
 
+    @pytest.mark.parametrize(
+        'max_length,message',
+        product(
+            [4, 5, 6, 7],
+            (
+                'øøøøøøøøøø',  # 2-byte
+                '。。。。。。。。。。',  # 3-byte
+                '💩💩💩💩💩💩💩💩💩💩',  # 4-byte
+            ),
+        ),
+    )
+    def test_split_mid_char(self, max_length, message):
+        """Check all permutations of mid-char breaks."""
+        # The string chunks up without error.
+        result = chunk_message(message, max_length=max_length)
+        # When rejoined, the original string is restored.
+        assert ''.join(map(bytes.decode, result)) == message
+
 
 class TestMakePrivMsgs:
     """Ensure make_privmsgs correctly constructs PRIVMSG command lists."""

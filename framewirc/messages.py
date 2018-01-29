@@ -97,19 +97,32 @@ def _chunk_message(message, max_length):
             # And move onto the next line.
             continue
 
-        # Whole line does not contain spaces, so split within word.
-        line_length = 0  # The running total size of the line
-        for i, str_char in enumerate(line):
-            char_length = len(str_char.encode())
-            line_length += char_length
-            if line_length > max_length:
-                letterpoint = i
-                break
+        # Split by byte length, and work backwards to char boundary.
+        chunk_bytes = line_bytes[:max_length]
+        b1, b2, b3, b4 = chunk_bytes[:max_length][-4:]
 
-        start = line[:letterpoint]
-        yield start.encode()
-        end = line[letterpoint:]
-        lines.appendleft(end)
+        if (  # Last character doesn't cross the boundary.
+            b4 >> 7 == 0b0 or  # 1-byte char.
+            b3 >> 5 == 0b110 or  # 2-byte char.
+            b2 >> 4 == 0b1110 or  # 3-byte char.
+            b1 >> 3 == 0b11110  # 4-byte char.
+        ):
+            offset = 0
+        elif (  # b4 begins a char crossing the boundary.
+            b4 >> 6 == 0b11  # 2-, 3-, or 4-byte char.
+        ):
+            offset = 1
+        elif (  # b3 begins a char crossing the boundary.
+            b3 >> 5 == 0b111  # 3- or 4-byte char.
+        ):
+            offset = 2
+        else:
+            # b2 must begin a 4-byte char crossing the boundary.
+            # ie: b2 >> 4 == 0b11110
+            offset = 3
+
+        yield chunk_bytes[:max_length-offset]
+        lines.appendleft(line_bytes[max_length-offset:].decode())
 
 
 def chunk_message(message, max_length):

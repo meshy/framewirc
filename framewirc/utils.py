@@ -29,8 +29,7 @@ class RequiredAttributesMixin:
     name.
     """
     def __init__(self, **kwargs):
-        for key, value in kwargs.items():
-            setattr(self, key, value)
+        self.__dict__.update(kwargs)
 
         missing_attrs = []
         for attr in self.required_attributes:

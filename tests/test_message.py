@@ -2,6 +2,7 @@ from itertools import product
 from unittest import mock
 
 import pytest
+from hypothesis import given, strategies
 
 from framewirc import exceptions
 from framewirc.messages import (
@@ -183,9 +184,22 @@ class TestChunkMessage:
 
     @pytest.mark.parametrize('max_length,message', _variations)
     def test_split_mid_char(self, max_length, message):
-        """Check all permutations of mid-char breaks."""
+        """Check obvious permutations of mid-char breaks."""
         # The string chunks up without error.
         result = chunk_message(message, max_length=max_length)
+        # When rejoined, the original string is restored.
+        assert ''.join(map(bytes.decode, result)) == message
+
+    @given(strategies.integers(min_value=4, max_value=255), strategies.text())
+    def test_split_garbage(self, max_length, message):
+        """Check mid-char breaks in garbage unicode."""
+        # The string chunks up without error.
+        result = chunk_message(message, max_length=max_length)
+        # No chunks exceed the max length.
+        for line in result:
+            assert len(line) <= max_length
+        # We strip newlines out of the message to avoid confusion.
+        message = ''.join(message.splitlines())
         # When rejoined, the original string is restored.
         assert ''.join(map(bytes.decode, result)) == message
 

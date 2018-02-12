@@ -2,5 +2,6 @@
 coverage==4.2.0
 flake8==3.0.4
 isort==4.2.5
+hypothesis==3.44.26
 pytest==3.0.4
 pytest-greendots==0.3

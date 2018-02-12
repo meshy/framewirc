@@ -146,9 +146,9 @@ class TestChunkMessage:
         """Does it split long lines?"""
         msg = 'Message to be split into chunks of twenty characters or less.'
         expected = [
-            b'Message to be split',
-            b'into chunks of',
-            b'twenty characters or',
+            b'Message to be split ',
+            b'into chunks of ',
+            b'twenty characters or ',
             b'less.',
         ]
         assert chunk_message(msg, max_length=20) == expected
@@ -157,7 +157,7 @@ class TestChunkMessage:
         """Does it split long words?"""
         msg = 'Sup Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch?'
         expected = [
-            b'Sup',
+            b'Sup ',
             b'Llanfairpwllgwyngyll',
             b'gogerychwyrndrobwlll',
             b'lantysiliogogogoch?',
@@ -255,7 +255,7 @@ class TestMakePrivMsgs:
                 b"you. Never gonna make you cry, Never gonna say goodbye, " +
                 b"Never gonna tell a lie and hurt you. We've known each " +
                 b"other for so long your heart's been aching but you're too " +
-                b"shy to say it. Inside we both\r\n"
+                b"shy to say it. Inside we both \r\n"
             ),
             (
                 b"PRIVMSG meshy :know what's been going on, We know the " +

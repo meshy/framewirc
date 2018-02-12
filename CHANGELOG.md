@@ -42,6 +42,8 @@ once the API is stable.
   Previously, when passed an instance of the wrong type, these functions would
   throw `AttributeError`. Now, correctly, they throw `TypeError`.
 
+- FIXED: `messages.chunk_bytes` no longer loses spaces when splitting lines.
+
 - FIXED: `messages.chunk_bytes` no longer splits lines that fit exactly.
 
 ## v0.1.0

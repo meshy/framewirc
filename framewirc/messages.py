@@ -89,7 +89,7 @@ def _chunk_message(message, max_length):
         spacepoint = line_bytes.rfind(b' ', 0, max_length+1)
         if spacepoint != -1:
             # Break on the last space that fits.
-            start = line_bytes[:spacepoint]
+            start = line_bytes[:(spacepoint + 1)]
             yield start
             # ... and add what's left back into the line pool.
             end = line_bytes[(spacepoint + 1):].decode()

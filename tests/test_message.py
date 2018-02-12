@@ -164,6 +164,12 @@ class TestChunkMessage:
         ]
         assert chunk_message(msg, max_length=20) == expected
 
+    def test_exact_length(self):
+        """Lines are not split unless it's required."""
+        msg = 'Exact.'
+        expected = [b'Exact.']
+        assert chunk_message(msg, max_length=len(msg)) == expected
+
     def test_split_long_unicode(self):
         """Are words with multi-byte chars split correctly?"""
         # Repeated failures lead to success.

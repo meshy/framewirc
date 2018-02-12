@@ -81,7 +81,7 @@ def _chunk_message(message, max_length):
         line = lines.popleft()
         line_bytes = line.encode()
         # If the line fits, add it the the lines.
-        if len(line_bytes) < max_length:
+        if len(line_bytes) <= max_length:
             yield line_bytes
             continue
 

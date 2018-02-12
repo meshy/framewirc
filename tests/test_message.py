@@ -174,17 +174,14 @@ class TestChunkMessage:
         ]
         assert chunk_message(msg, max_length=20) == expected
 
-    @pytest.mark.parametrize(
-        'max_length,message',
-        product(
-            [4, 5, 6, 7],
-            (
-                'øøøøøøøøøø',  # 2-byte
-                '。。。。。。。。。。',  # 3-byte
-                '💩💩💩💩💩💩💩💩💩💩',  # 4-byte
-            ),
-        ),
+    _multibyte_strings = (
+        'øøøøøøøøøø',  # 2-byte
+        '。。。。。。。。。。',  # 3-byte
+        '💩💩💩💩💩💩💩💩💩💩',  # 4-byte
     )
+    _variations = product([4, 5, 6, 7], _multibyte_strings)
+
+    @pytest.mark.parametrize('max_length,message', _variations)
     def test_split_mid_char(self, max_length, message):
         """Check all permutations of mid-char breaks."""
         # The string chunks up without error.

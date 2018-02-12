@@ -101,24 +101,25 @@ def _chunk_message(message, max_length):
         chunk_bytes = line_bytes[:max_length]
         b1, b2, b3, b4 = chunk_bytes[:max_length][-4:]
 
-        if (  # Last character doesn't cross the boundary.
+        # Last character doesn't cross the boundary.
+        if (
             b4 >> 7 == 0b0 or  # 1-byte char.
             b3 >> 5 == 0b110 or  # 2-byte char.
             b2 >> 4 == 0b1110 or  # 3-byte char.
             b1 >> 3 == 0b11110  # 4-byte char.
         ):
             offset = 0
-        elif (  # b4 begins a char crossing the boundary.
-            b4 >> 6 == 0b11  # 2-, 3-, or 4-byte char.
-        ):
+
+        # b4 begins a char crossing the boundary.
+        elif b4 >> 6 == 0b11:  # 2-, 3-, or 4-byte char.
             offset = 1
-        elif (  # b3 begins a char crossing the boundary.
-            b3 >> 5 == 0b111  # 3- or 4-byte char.
-        ):
+
+        # b3 begins a char crossing the boundary.
+        elif b3 >> 5 == 0b111:  # 3- or 4-byte char.
             offset = 2
-        else:
-            # b2 must begin a 4-byte char crossing the boundary.
-            # ie: b2 >> 4 == 0b11110
+
+        # b2 must begin a 4-byte char crossing the boundary.
+        else:  # ie: b2 >> 4 == 0b11110
             offset = 3
 
         yield chunk_bytes[:max_length-offset]

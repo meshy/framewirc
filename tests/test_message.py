@@ -2,6 +2,7 @@ from itertools import product
 from unittest import mock
 
 import pytest
+from hypothesis import given, strategies
 
 from framewirc import exceptions
 from framewirc.messages import (
@@ -145,9 +146,9 @@ class TestChunkMessage:
         """Does it split long lines?"""
         msg = 'Message to be split into chunks of twenty characters or less.'
         expected = [
-            b'Message to be split',
-            b'into chunks of',
-            b'twenty characters or',
+            b'Message to be split ',
+            b'into chunks of ',
+            b'twenty characters or ',
             b'less.',
         ]
         assert chunk_message(msg, max_length=20) == expected
@@ -156,12 +157,18 @@ class TestChunkMessage:
         """Does it split long words?"""
         msg = 'Sup Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch?'
         expected = [
-            b'Sup',
+            b'Sup ',
             b'Llanfairpwllgwyngyll',
             b'gogerychwyrndrobwlll',
             b'lantysiliogogogoch?',
         ]
         assert chunk_message(msg, max_length=20) == expected
+
+    def test_exact_length(self):
+        """Lines are not split unless it's required."""
+        msg = 'Exact.'
+        expected = [b'Exact.']
+        assert chunk_message(msg, max_length=len(msg)) == expected
 
     def test_split_long_unicode(self):
         """Are words with multi-byte chars split correctly?"""
@@ -173,6 +180,34 @@ class TestChunkMessage:
             to_bytes('功に至る。'),
         ]
         assert chunk_message(msg, max_length=20) == expected
+
+    _multibyte_strings = (
+        'øøøøøøøøøø',  # 2-byte
+        '。。。。。。。。。。',  # 3-byte
+        '💩💩💩💩💩💩💩💩💩💩',  # 4-byte
+    )
+    _variations = product([4, 5, 6, 7], _multibyte_strings)
+
+    @pytest.mark.parametrize('max_length,message', _variations)
+    def test_split_mid_char(self, max_length, message):
+        """Check obvious permutations of mid-char breaks."""
+        # The string chunks up without error.
+        result = chunk_message(message, max_length=max_length)
+        # When rejoined, the original string is restored.
+        assert ''.join(map(bytes.decode, result)) == message
+
+    @given(strategies.integers(min_value=4, max_value=255), strategies.text())
+    def test_split_garbage(self, max_length, message):
+        """Check mid-char breaks in garbage unicode."""
+        # The string chunks up without error.
+        result = chunk_message(message, max_length=max_length)
+        # No chunks exceed the max length.
+        for line in result:
+            assert len(line) <= max_length
+        # We strip newlines out of the message to avoid confusion.
+        message = ''.join(message.splitlines())
+        # When rejoined, the original string is restored.
+        assert ''.join(map(bytes.decode, result)) == message
 
 
 class TestMakePrivMsgs:
@@ -220,7 +255,7 @@ class TestMakePrivMsgs:
                 b"you. Never gonna make you cry, Never gonna say goodbye, " +
                 b"Never gonna tell a lie and hurt you. We've known each " +
                 b"other for so long your heart's been aching but you're too " +
-                b"shy to say it. Inside we both\r\n"
+                b"shy to say it. Inside we both \r\n"
             ),
             (
                 b"PRIVMSG meshy :know what's been going on, We know the " +

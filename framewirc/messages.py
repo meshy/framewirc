@@ -79,39 +79,51 @@ def _chunk_message(message, max_length):
     lines = deque(message.splitlines())
     while lines:
         line = lines.popleft()
-        line_bytes = to_bytes(line)
-        # If the line fits, add it the the lines.
-        if len(line_bytes) < max_length:
+        line_bytes = line.encode()
+        # If the line fits, add it to the accepted lines.
+        if len(line_bytes) <= max_length:
             yield line_bytes
             continue
 
-        # Whole line doesn't fit, so see if it can be split on space.
-        letterpoint = None  # Where we should break if there is no space
-        spacepoint = None  # Where we should break if there is a space.
-        line_length = 0  # The running total size of the line
-        for i, str_char in enumerate(line):
-            char_length = len(to_bytes(str_char))
-            line_length += char_length
-            if str_char == ' ':
-                spacepoint = i
-            if line_length > max_length:
-                letterpoint = i
-                break
-
-        if spacepoint is not None:
+        # See if there is a space below the max length.
+        spacepoint = line_bytes.rfind(b' ', 0, max_length+1)
+        if spacepoint != -1:
             # Break on the last space that fits.
-            start = line[:spacepoint]
-            yield to_bytes(start)
+            start = line_bytes[:(spacepoint + 1)]
+            yield start
             # ... and add what's left back into the line pool.
-            end = line[(spacepoint + 1):]
+            end = line_bytes[(spacepoint + 1):].decode()
             lines.appendleft(end)
+            # And move onto the next line.
             continue
 
-        # Whole line does not contain spaces, so split within word.
-        start = line[:letterpoint]
-        yield to_bytes(start)
-        end = line[letterpoint:]
-        lines.appendleft(end)
+        # Split by byte length, and work backwards to char boundary.
+        chunk_bytes = line_bytes[:max_length]
+        b1, b2, b3, b4 = chunk_bytes[:max_length][-4:]
+
+        # Last character doesn't cross the boundary.
+        if (
+            b4 >> 7 == 0b0 or  # 1-byte char.
+            b3 >> 5 == 0b110 or  # 2-byte char.
+            b2 >> 4 == 0b1110 or  # 3-byte char.
+            b1 >> 3 == 0b11110  # 4-byte char.
+        ):
+            offset = 0
+
+        # b4 begins a char crossing the boundary.
+        elif b4 >> 6 == 0b11:  # 2-, 3-, or 4-byte char.
+            offset = 1
+
+        # b3 begins a char crossing the boundary.
+        elif b3 >> 5 == 0b111:  # 3- or 4-byte char.
+            offset = 2
+
+        # b2 must begin a 4-byte char crossing the boundary.
+        else:  # ie: b2 >> 4 == 0b11110
+            offset = 3
+
+        yield chunk_bytes[:max_length-offset]
+        lines.appendleft(line_bytes[max_length-offset:].decode())
 
 
 def chunk_message(message, max_length):

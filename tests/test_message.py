@@ -234,7 +234,7 @@ class TestMakePrivMsgs:
     def test_long_line(self):
         too_long = (
             "We're no strangers to love, You know the rules and so do I. " +
-            "A full commitment's what I'm thinking of, You wouldnt get " +
+            "A full commitment's what I'm thinking of, You wouldn't get " +
             "this from any other guy. I just wanna tell you how I'm " +
             "feeling, Gotta make you understand… Never gonna give you up, " +
             "Never gonna let you down, Never gonna run around and desert " +
@@ -248,18 +248,18 @@ class TestMakePrivMsgs:
             (
                 b"PRIVMSG meshy :We're no strangers to love, You know the " +
                 b"rules and so do I. A full commitment's what I'm thinking " +
-                b"of, You wouldnt get this from any other guy. I just wanna " +
+                b"of, You wouldn't get this from any other guy. I just wanna " +
                 b"tell you how I'm feeling, Gotta make you " +
                 b"understand\xe2\x80\xa6 Never gonna give you up, Never " +
                 b"gonna let you down, Never gonna run around and desert " +
                 b"you. Never gonna make you cry, Never gonna say goodbye, " +
-                b"Never gonna tell a lie and hurt you. We've known each " +
-                b"other for so long your heart's been aching but you're too " +
-                b"shy to say it. Inside we both \r\n"
+                b"Never gonna tell a lie and hurt you. \r\n"
             ),
             (
-                b"PRIVMSG meshy :know what's been going on, We know the " +
-                b"game and we're gonna play it.\r\n"
+                b"PRIVMSG meshy :We've known each other for so long your " +
+                b"heart's been aching but you're too shy to say it. Inside " +
+                b"we both know what's been going on, We know the game and " +
+                b"we're gonna play it.\r\n"
             ),
         ]
 
@@ -272,8 +272,17 @@ class TestMakePrivMsgs:
         with mock.patch('framewirc.messages.chunk_message') as chunk_message:
             make_privmsgs('meshy', msg)
 
-        expected_max = 495  # 512 - len(b'PRIVMSG meshy :' + b'\r\n')
-        chunk_message.assert_called_with(msg, max_length=expected_max)
+        # 393 = 512 - len(': PRIVMSG meshy :\r\n') - 100
+        chunk_message.assert_called_with(msg, max_length=393)
+
+    def test_prefix_allowance(self):
+        """Is the correct max_length calculated when prefix passed?"""
+        msg = 'A test message'
+        with mock.patch('framewirc.messages.chunk_message') as chunk_message:
+            make_privmsgs('meshy', msg, mask_length=200)
+
+        # 293 = 512 - len(b': PRIVMSG meshy :\r\n') - 200
+        chunk_message.assert_called_with(msg, max_length=293)
 
     def test_third_person(self):
         """Are third person messages marked?"""
@@ -287,5 +296,5 @@ class TestMakePrivMsgs:
         with mock.patch('framewirc.messages.chunk_message') as chunk_message:
             make_privmsgs('meshy', msg, third_person=True)
 
-        expected_max = 486  # 512 - len(b'PRIVMSG meshy :\1ACTION ' + b'\1\r\n')
-        chunk_message.assert_called_with(msg, max_length=expected_max)
+        # 384 = 512 - len(b': PRIVMSG meshy :\1ACTION \1\r\n') - 100
+        chunk_message.assert_called_with(msg, max_length=384)

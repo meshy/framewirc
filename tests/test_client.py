@@ -133,6 +133,21 @@ class TestPrivmsg:
         expected = [b'PRIVMSG #channel :\1ACTION is speaking in 3rd person!\1\r\n']
         client.connection.send_batch.assert_called_once_with(expected)
 
+    def test_mask_length(self):
+        mask_length = mock.Mock()
+        client = BlankClient(mask_length=mask_length)
+        client.connection = mock.MagicMock(spec=Connection)
+        message = 'We know the size of the mask!'
+        with mock.patch('framewirc.client.make_privmsgs') as make_privmsgs:
+            client.privmsg('#channel', message)
+
+        make_privmsgs.assert_called_once_with(
+            '#channel',
+            message,
+            third_person=False,
+            mask_length=mask_length,
+        )
+
 
 class TestRequiredFields:
     """Test to show that RequiredAttribuesMixin is properly configured."""
@@ -154,7 +169,7 @@ class TestSetNick:
     """Test the Client.set_nick() method."""
     def setup_method(self, method):
         """Can't make an IRC connection in tests, so a mock will have to do."""
-        self.client = BlankClient()
+        self.client = BlankClient(mask_length=42)
         self.client.connection = mock.MagicMock(spec=Connection)
 
     def test_command_sent(self):
@@ -167,3 +182,8 @@ class TestSetNick:
         new_nick = 'meshy'
         self.client.set_nick(new_nick)
         assert self.client.nick == new_nick
+
+    def test_mask_length_reset(self):
+        """When the nick changes, reset the mask_length."""
+        self.client.set_nick('meshy')
+        assert self.client.mask_length is None

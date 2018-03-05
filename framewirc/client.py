@@ -9,6 +9,7 @@ class Client(utils.RequiredAttributesMixin):
     """Handle events from Connection and offer methods for sending data."""
     connection_class = Connection
     required_attributes = ('handlers', 'real_name', 'nick')
+    mask_length = None
 
     def connect_to(self, host, **kwargs):
         """Create a Connection. Handled in the event loop."""
@@ -39,9 +40,17 @@ class Client(utils.RequiredAttributesMixin):
         self.connection.send(msg)
 
     def privmsg(self, target, message, third_person=False):
-        self.connection.send_batch(make_privmsgs(target, message, third_person))
+        messages = make_privmsgs(
+            target,
+            message,
+            third_person=third_person,
+            mask_length=self.mask_length,
+        )
+        self.connection.send_batch(messages)
 
     def set_nick(self, new_nick):
         """Set a nick on the network."""
         self.connection.send(build_message(commands.NICK, new_nick))
         self.nick = new_nick
+        # As soon as the nick changes, reset mask_length.
+        self.mask_length = None

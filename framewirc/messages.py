@@ -136,13 +136,35 @@ def chunk_message(message, max_length):
     return list(_chunk_message(message, max_length))
 
 
-def make_privmsgs(target, message, third_person=False):
-    """Turn a string into a number of PRIVMSG commands."""
-    overhead = 5  # Two spaces, a colon, and the \r\n line ending.
+def make_privmsgs(target, message, third_person=False, mask_length=None):
+    """
+    Turns `message` into a list of `PRIVMSG` commands (to `target`).
+
+    The `third_person` flag can be used to send `/me` commands.
+
+    If the message is too long, we span it across multiple commands.
+
+    We don't send a mask prefix, but the network will add it. This lets clients
+    know who the sender of the message is, and impacts the maximum length of
+    the transmitted command.
+
+    When the `mask_length` is `None`, we allow a default of 100 chars.
+    """
+    # If we don't know exactly how long the mask will be, make a guess.
+    # I can't find a maximum length in the spec; 100 chars seems safe.
+    if mask_length is None:
+        mask_length = 100
+
+    # Three spaces, two colons, \r, and \n makes 7:
+    #     :mask PRIVMSG target :message\r\n
+    #     ^    ^       ^      ^^        ^ ^
+    overhead = mask_length + len(commands.PRIVMSG) + len(target) + 7
+
+    # Third person messages (ie: /me) have a few extra chars.
     if third_person:
         overhead += len(ACTION_START) + len(ACTION_END)
 
-    max_length = MAX_LENGTH - (len(commands.PRIVMSG) + len(target) + overhead)
+    max_length = MAX_LENGTH - overhead
     messages = []
     for line in chunk_message(message, max_length=max_length):
         if third_person:
